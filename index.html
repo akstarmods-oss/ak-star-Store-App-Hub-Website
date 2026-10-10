@@ -1,1 +1,1870 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AK STAR STORE | App Hub</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0b10;
+            --card-bg: rgba(20, 22, 34, 0.75);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.35);
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.3);
+            --edit: #3b82f6;
+            --edit-glow: rgba(59, 130, 246, 0.3);
+            --star-gold: #f59e0b;
+            --text-primary: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-blur: blur(16px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--bg-dark);
+        }
+
+        body {
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* 120Hz Hardware Acceleration */
+        .app-card, .btn-download, .btn-share, .chip, .btn-admin-access, .modal-card, .btn-primary, .cat-badge {
+            will-change: transform, box-shadow;
+            transform: translateZ(0);
+        }
+
+        /* Toast notification */
+        .toast-alert {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e1b4b;
+            color: #c7d2fe;
+            border: 1px solid var(--accent);
+            padding: 12px 24px;
+            border-radius: 99px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 99999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toast-alert.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 11, 16, 0.85);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .logo-text span {
+            color: var(--accent);
+        }
+
+        .search-bar input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 99px;
+            padding: 10px 18px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+            width: 260px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .search-bar input:focus {
+            width: 320px;
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* Admin Trigger Button */
+        .btn-admin-access {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-admin-access * {
+            pointer-events: none;
+        }
+
+        .btn-admin-access:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--accent);
+            box-shadow: 0 0 16px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        /* Layout */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Hero */
+        .hero-banner {
+            text-align: center;
+            padding: 30px 15px 40px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #818cf8;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 6px 14px;
+            border-radius: 99px;
+            margin-bottom: 16px;
+        }
+
+        .hero-banner h1 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+
+        .hero-banner p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 540px;
+            margin: 0 auto;
+        }
+
+        /* Categories */
+        .categories {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            scrollbar-width: none;
+        }
+
+        .categories::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip {
+            padding: 8px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .chip.active, .chip:hover {
+            background: var(--text-primary);
+            color: var(--bg-dark);
+        }
+
+        /* Apps Grid */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        /* App Card */
+        .app-card {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 16px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4), 0 0 24px var(--accent-glow);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .app-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Logo Icon / Image */
+        .app-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            display: block;
+        }
+
+        .app-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .app-info h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .app-dev {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: block;
+        }
+
+        /* Play Store Stats in Card */
+        .app-stats-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 6px;
+            font-size: 0.8rem;
+        }
+
+        .stat-rating {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            color: #fbbf24;
+            font-weight: 700;
+        }
+
+        .meta-tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 0.72rem;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 3px 8px;
+            border-radius: 6px;
+            color: var(--text-muted);
+        }
+
+        .app-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Card Button Actions (Download + Share) */
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-download {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+        }
+
+        .btn-download:hover {
+            background: linear-gradient(135deg, #4338ca, #4f46e5);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.55);
+            transform: scale(1.02);
+        }
+
+        .btn-download:active {
+            transform: scale(0.98);
+        }
+
+        .btn-share {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-share:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--accent);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* Modals Generic */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex !important;
+        }
+
+        .modal-card {
+            background: #121420;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 28px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            position: relative;
+            z-index: 10000;
+        }
+
+        .modal-card.dashboard-card {
+            max-width: 980px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-card.details-card {
+            max-width: 720px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 4px;
+        }
+
+        .close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* Play Store App Details Modal Inside UI */
+        .details-hero {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .details-icon {
+            width: 88px;
+            height: 88px;
+            border-radius: 22px;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            font-size: 2.8rem;
+            flex-shrink: 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .details-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .details-title h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .details-title span {
+            color: #818cf8;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* Play Store Badges Row */
+        .playstore-badges-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 16px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .badge-col {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .badge-col-val {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-col-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .details-actions-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        /* Play Store Reviews Section */
+        .reviews-section {
+            margin-top: 28px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+        }
+
+        .reviews-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Write Review Box */
+        .write-review-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .star-rating-select {
+            display: flex;
+            gap: 6px;
+            margin: 8px 0 12px;
+            cursor: pointer;
+        }
+
+        .star-item {
+            font-size: 1.5rem;
+            color: #4b5563;
+            transition: color 0.15s ease;
+        }
+
+        .star-item.selected, .star-item:hover {
+            color: #f59e0b;
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 280px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .review-author {
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .review-stars {
+            color: #f59e0b;
+            font-size: 0.8rem;
+        }
+
+        .review-comment {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Form Styles */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+            width: 100%;
+        }
+
+        .input-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .input-group input, 
+        .input-group select, 
+        .input-group textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 11px 14px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-group select option {
+            background: #121420;
+            color: #fff;
+        }
+
+        .input-group input:focus, 
+        .input-group select:focus, 
+        .input-group textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.8rem;
+            display: none;
+            margin-top: 4px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4338ca, #4f46e5);
+            box-shadow: 0 6px 18px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            margin-top: 8px;
+            display: none;
+        }
+
+        /* Dashboard Inner Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 24px;
+            margin-top: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .dashboard-section h3 {
+            font-size: 1rem;
+            margin-bottom: 14px;
+            color: #c7d2fe;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .category-management-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 20px;
+        }
+
+        .add-category-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .add-category-row input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .btn-add-cat {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .admin-categories-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .cat-badge {
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            color: #c7d2fe;
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cat-del-btn {
+            background: none;
+            border: none;
+            color: #f87171;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        /* Admin App List */
+        .admin-app-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .admin-item-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .admin-item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .admin-item-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
+        }
+
+        .admin-item-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .admin-item-details h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .admin-item-details span {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .btn-edit {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid var(--edit);
+            color: #60a5fa;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 24px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 820px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .playstore-badges-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-bar input {
+                width: 100%;
+            }
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .details-hero {
+                flex-direction: column;
+                text-align: center;
+            }
+            .details-actions-bar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toast Notification -->
+    <div class="toast-alert" id="toastAlert">
+        <span>🔗 Link copied to clipboard!</span>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo" onclick="window.location.href='index.html'">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">AK STAR <span>STORE</span></span>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search apps, tools, games..." id="searchInput">
+            </div>
+            <!-- Admin Secret Trigger Button -->
+            <button class="btn-admin-access" id="openAdminModalBtn" onclick="openAuthModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span>Admin Portal</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="hero-banner">
+            <div class="badge">FEATURED RELEASE</div>
+            <h1>Next-Gen Apps Direct to Your Device</h1>
+            <p>Download tested, high-performance APKs directly with zero throttle.</p>
+        </section>
+
+        <!-- Dynamic Category Filters Container -->
+        <div class="categories" id="categoriesContainer">
+            <!-- Populated via JavaScript dynamically -->
+        </div>
+
+        <!-- Dynamic Apps Grid -->
+        <section class="apps-grid" id="appsGrid">
+            <!-- App Cards Load Here Automatically -->
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 AK STAR STORE • Fast & Verified APK Distribution</p>
+    </footer>
+
+    <!-- Play Store App Details & Reviews Modal -->
+    <div class="modal-overlay" id="appDetailsModal">
+        <div class="modal-card details-card">
+            <div class="modal-header">
+                <span class="badge" id="modalCategoryBadge">CATEGORY</span>
+                <button class="close-btn" onclick="closeDetailsModal()">&times;</button>
+            </div>
+
+            <!-- Details Hero -->
+            <div class="details-hero">
+                <div class="details-icon" id="modalAppIcon">📱</div>
+                <div class="details-title">
+                    <h2 id="modalAppName">App Name</h2>
+                    <span id="modalAppDev">Developer</span>
+                </div>
+            </div>
+
+            <!-- Play Store Stats Badges -->
+            <div class="playstore-badges-row">
+                <div class="badge-col">
+                    <span class="badge-col-val" id="modalRatingVal">4.8 ★</span>
+                    <span class="badge-col-label" id="modalReviewsCount">124 Reviews</span>
+                </div>
+                <div class="badge-col">
+                    <span class="badge-col-val" id="modalSizeVal">45 MB</span>
+                    <span class="badge-col-label">File Size</span>
+                </div>
+                <div class="badge-col">
+                    <span class="badge-col-val" id="modalVersionVal">v1.0</span>
+                    <span class="badge-col-label">Verified APK</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons (Download & Share) -->
+            <div class="details-actions-bar">
+                <a href="#" target="_blank" download class="btn-download" id="modalDownloadBtn">
+                    <span>Install / Download APK</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </a>
+                <button class="btn-share" id="modalShareBtn" onclick="shareCurrentModalApp()" title="Share App Link">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    <span style="margin-left: 6px; font-weight: 700;">Share</span>
+                </button>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <h4 style="font-size: 0.95rem; margin-bottom: 8px; color: #c7d2fe;">About this app</h4>
+                <p id="modalAppDesc" style="color: var(--text-muted); line-height: 1.6; font-size: 0.92rem;"></p>
+            </div>
+
+            <!-- Reviews & Rating Section -->
+            <div class="reviews-section">
+                <h3>
+                    <span>Ratings & User Reviews</span>
+                    <span style="font-size: 0.85rem; color: #fbbf24;" id="modalRatingOverview">★ 4.8 / 5</span>
+                </h3>
+
+                <!-- Write a Review Form -->
+                <div class="write-review-box">
+                    <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe;">Leave a Review:</label>
+                    <div class="star-rating-select" id="starRatingSelector">
+                        <span class="star-item selected" data-value="1">★</span>
+                        <span class="star-item selected" data-value="2">★</span>
+                        <span class="star-item selected" data-value="3">★</span>
+                        <span class="star-item selected" data-value="4">★</span>
+                        <span class="star-item selected" data-value="5">★</span>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 10px;">
+                        <input type="text" id="reviewAuthorInput" placeholder="Your Name or Nickname...">
+                    </div>
+                    <div class="input-group" style="margin-bottom: 10px;">
+                        <textarea id="reviewCommentInput" rows="2" placeholder="Write what you think about this app..."></textarea>
+                    </div>
+                    <button class="btn-primary" type="button" onclick="submitUserReview()" style="padding: 10px; font-size: 0.88rem;">Post Review</button>
+                </div>
+
+                <!-- Reviews Feed -->
+                <div class="reviews-list" id="modalReviewsList">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Authentication Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Admin Verification</h3>
+                <button class="close-btn" id="closeAuthModal" onclick="closeAuthModalFunc()">&times;</button>
+            </div>
+            <p class="modal-subtitle">Enter your secret passkey to access control settings.</p>
+            <div class="input-group">
+                <input type="password" id="secretKeyInput" placeholder="Enter Secret Key">
+                <p class="error-msg" id="authErrorMsg">Invalid Secret Key!</p>
+            </div>
+            <button class="btn-primary" id="verifyKeyBtn" onclick="verifyAdminAccess()">Authenticate</button>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Modal -->
+    <div class="modal-overlay" id="adminDashboardModal">
+        <div class="modal-card dashboard-card">
+            <div class="modal-header">
+                <div class="admin-title">
+                    <span class="badge-active">AUTHORIZED</span>
+                    <h2>Store Management Control Panel</h2>
+                </div>
+                <button class="close-btn" id="closeDashboardModal" onclick="closeDashboardModalFunc()">&times;</button>
+            </div>
+
+            <!-- Category Manager Section -->
+            <div class="category-management-box">
+                <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
+                    📂 Manage Categories (Add / Remove)
+                </label>
+                <div class="add-category-row">
+                    <input type="text" id="newCategoryInput" placeholder="New category name (e.g. Media Players, Games)...">
+                    <button class="btn-add-cat" type="button" onclick="addNewCategory()">+ Add Category</button>
+                </div>
+                <div class="admin-categories-tags" id="adminCategoryTags">
+                    <!-- Populated via JavaScript -->
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Add / Edit App Form -->
+                <div class="dashboard-section form-section">
+                    <h3 id="formSectionTitle">Add / Upload App Details</h3>
+                    <form id="addAppForm" onsubmit="handleAppSubmit(event)">
+                        <!-- Hidden ID to track edit mode -->
+                        <input type="hidden" id="editingAppId" value="">
+
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label>App Name</label>
+                                <input type="text" id="appNameInput" placeholder="e.g. Saloni AI" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Developer Name</label>
+                                <input type="text" id="appDevInput" placeholder="e.g. AK Star Company" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label>Category</label>
+                                <select id="appCategoryInput" required>
+                                    <!-- Dynamic Options -->
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Version</label>
+                                <input type="text" id="appVersionInput" placeholder="e.g. v1.0.4" required>
+                            </div>
+                            <div class="input-group">
+                                <label>File Size</label>
+                                <input type="text" id="appSizeInput" placeholder="e.g. 48 MB" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label>App Icon / Logo (Image URL, Base64 or Emoji)</label>
+                                <input type="text" id="appIconInput" placeholder="Paste Direct Image URL or Emoji" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Direct APK Download Link (GitHub, Drive, Direct URL)</label>
+                                <input type="url" id="appDownloadUrlInput" placeholder="https://..." required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Short Description</label>
+                            <textarea id="appDescInput" rows="2" placeholder="Describe the application features..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="submitAppBtn">Add App To Store</button>
+                        <button type="button" class="btn-secondary" id="cancelEditBtn" onclick="cancelEditing()">Cancel Edit</button>
+                    </form>
+                </div>
+
+                <!-- Existing Apps List & Controls -->
+                <div class="dashboard-section list-section">
+                    <h3>Managed Apps Collection</h3>
+                    <div class="admin-app-list" id="adminAppList">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const SECRET_ADMIN_KEY = "Ak732888";
+
+        // Initial default categories
+        const initialCategories = ["AI Tools", "Music & Audio", "Utilities", "Games"];
+
+        // Initial Apps Seed Data with Reviews & Play Store Rating Fields
+        const initialApps = [
+            {
+                id: "app-1",
+                name: "Dp mod",
+                developer: "Dp",
+                category: "AI Tools",
+                version: "1.2",
+                size: "5.8 MB",
+                icon: "https://i.ibb.co/vz9kC5k/dpmod.png",
+                gradient: "linear-gradient(135deg, #06b6d4, #3b82f6)",
+                description: "Supercharged feature-packed utility build designed for performance and instant delivery.",
+                downloadUrl: "apps/dp-mod.apk",
+                rating: 4.9,
+                reviews: [
+                    { author: "Aman", stars: 5, comment: "Bhai ekdam mast app hai! 100% working and fast." },
+                    { author: "Rahul K.", stars: 5, comment: "Super smooth UI, direct download ho gaya." }
+                ]
+            },
+            {
+                id: "app-2",
+                name: "Saloni AI",
+                developer: "AK Star Company",
+                category: "AI Tools",
+                version: "v1.0.4",
+                size: "48 MB",
+                icon: "🤖",
+                gradient: "linear-gradient(135deg, #6366f1, #a855f7)",
+                description: "Smart AI assistant app powered by conversational intelligence.",
+                downloadUrl: "apps/saloni-ai.apk",
+                rating: 4.8,
+                reviews: [
+                    { author: "Dev User", stars: 5, comment: "Best voice AI assistant, love the UI." }
+                ]
+            },
+            {
+                id: "app-3",
+                name: "Stem Splitter Pro",
+                developer: "AK Star Production",
+                category: "Music & Audio",
+                version: "v2.1.0",
+                size: "95 MB",
+                icon: "🎵",
+                gradient: "linear-gradient(135deg, #f43f5e, #fb923c)",
+                description: "Multi-track audio stem extractor for music producers.",
+                downloadUrl: "apps/stem-splitter.apk",
+                rating: 4.7,
+                reviews: [
+                    { author: "Audio Producer", stars: 5, comment: "Extracted vocals and drums perfectly!" }
+                ]
+            }
+        ];
+
+        // Categories Storage Helpers
+        function getCategories() {
+            const saved = localStorage.getItem("ak_star_categories");
+            if (!saved) {
+                localStorage.setItem("ak_star_categories", JSON.stringify(initialCategories));
+                return initialCategories;
+            }
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                return initialCategories;
+            }
+        }
+
+        function saveCategories(cats) {
+            localStorage.setItem("ak_star_categories", JSON.stringify(cats));
+        }
+
+        // Apps Storage Helpers
+        function getApps() {
+            const saved = localStorage.getItem("ak_star_apps");
+            if (!saved) {
+                localStorage.setItem("ak_star_apps", JSON.stringify(initialApps));
+                return initialApps;
+            }
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                return initialApps;
+            }
+        }
+
+        function saveApps(apps) {
+            localStorage.setItem("ak_star_apps", JSON.stringify(apps));
+        }
+
+        let currentCategory = "All";
+        let searchQuery = "";
+        let currentlyOpenedAppId = null;
+        let selectedReviewRating = 5;
+
+        // Toast Helper
+        function showToast(msg) {
+            const toast = document.getElementById("toastAlert");
+            if (!toast) return;
+            toast.innerHTML = `<span>${msg}</span>`;
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+
+        // Format Logo / Image Element with referrer-policy and fallback support
+        function formatIconHTML(iconStr) {
+            if (iconStr && (iconStr.startsWith("http://") || iconStr.startsWith("https://") || iconStr.startsWith("data:image"))) {
+                return `<img src="${iconStr}" alt="Logo" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.style.display='none'; this.parentElement.innerText='📱';">`;
+            }
+            return iconStr || "📱";
+        }
+
+        // Helper: Calculate average rating
+        function getAverageRating(app) {
+            if (!app.reviews || app.reviews.length === 0) return app.rating || 5.0;
+            const sum = app.reviews.reduce((acc, r) => acc + Number(r.stars), 0);
+            return (sum / app.reviews.length).toFixed(1);
+        }
+
+        // Render Category Filter Chips and Form Dropdown
+        function renderCategoryUI() {
+            const categories = getCategories();
+
+            // 1. Render Top Filter Chips
+            const container = document.getElementById("categoriesContainer");
+            if (container) {
+                let html = `<button class="chip ${currentCategory === 'All' ? 'active' : ''}" onclick="selectCategory('All', this)">All Apps</button>`;
+                categories.forEach(cat => {
+                    html += `<button class="chip ${currentCategory === cat ? 'active' : ''}" onclick="selectCategory('${cat}', this)">${cat}</button>`;
+                });
+                container.innerHTML = html;
+            }
+
+            // 2. Render Form Select Options
+            const selectEl = document.getElementById("appCategoryInput");
+            if (selectEl) {
+                const prevVal = selectEl.value;
+                selectEl.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
+                if (categories.includes(prevVal)) {
+                    selectEl.value = prevVal;
+                }
+            }
+
+            // 3. Render Admin Category Badges in Dashboard
+            const adminTagsContainer = document.getElementById("adminCategoryTags");
+            if (adminTagsContainer) {
+                adminTagsContainer.innerHTML = categories.map(cat => `
+                    <div class="cat-badge">
+                        <span>${cat}</span>
+                        <button class="cat-del-btn" title="Delete Category" onclick="removeCategory('${cat}')">&times;</button>
+                    </div>
+                `).join("");
+            }
+        }
+
+        // Add Category Function
+        window.addNewCategory = function() {
+            const input = document.getElementById("newCategoryInput");
+            const val = input.value.trim();
+            if (!val) {
+                alert("Please enter a category name!");
+                return;
+            }
+
+            let categories = getCategories();
+            if (categories.some(c => c.toLowerCase() === val.toLowerCase()) || val.toLowerCase() === "all") {
+                alert("This category already exists!");
+                return;
+            }
+
+            categories.push(val);
+            saveCategories(categories);
+            input.value = "";
+            renderCategoryUI();
+            renderStoreApps();
+        };
+
+        // Remove Category Function
+        window.removeCategory = function(catToRemove) {
+            if (confirm(`Are you sure you want to remove the category "${catToRemove}"?`)) {
+                let categories = getCategories();
+                categories = categories.filter(c => c !== catToRemove);
+                saveCategories(categories);
+
+                if (currentCategory === catToRemove) {
+                    currentCategory = "All";
+                }
+
+                renderCategoryUI();
+                renderStoreApps();
+            }
+        };
+
+        // Render Apps on Store Front with Share Button and Click-to-Open Details
+        function renderStoreApps() {
+            const appsGrid = document.getElementById("appsGrid");
+            if (!appsGrid) return;
+            
+            const apps = getApps();
+            appsGrid.innerHTML = "";
+
+            const filtered = apps.filter(app => {
+                const matchesCategory = currentCategory === "All" || app.category === currentCategory;
+                const matchesSearch = app.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      app.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                      app.developer.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                appsGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px 0;">No apps found matching your query.</div>`;
+                return;
+            }
+
+            filtered.forEach(app => {
+                const avgRating = getAverageRating(app);
+                const reviewCount = app.reviews ? app.reviews.length : 0;
+
+                const card = document.createElement("article");
+                card.className = "app-card";
+                card.setAttribute("onclick", `openAppDetails('${app.id}')`);
+                card.innerHTML = `
+                    <div class="app-top">
+                        <div class="app-icon" style="background: ${app.gradient || 'linear-gradient(135deg, #6366f1, #a855f7)'}">
+                            ${formatIconHTML(app.icon)}
+                        </div>
+                        <div class="app-info">
+                            <h3>${app.name}</h3>
+                            <span class="app-dev">${app.developer}</span>
+                            <div class="app-stats-row">
+                                <span class="stat-rating">★ ${avgRating}</span>
+                                <span style="color: var(--text-muted);">•</span>
+                                <span style="color: var(--text-muted);">${app.size}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="meta-tags">
+                        <span class="tag">v${app.version}</span>
+                        <span class="tag">${app.category}</span>
+                        <span class="tag">${reviewCount} Reviews</span>
+                    </div>
+                    <p class="app-desc">${app.description}</p>
+                    <div class="card-actions" onclick="event.stopPropagation()">
+                        <a href="${app.downloadUrl}" target="_blank" download class="btn-download">
+                            <span>Download APK</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </a>
+                        <button class="btn-share" onclick="shareSpecificApp('${app.id}', event)" title="Share App Link">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                appsGrid.appendChild(card);
+            });
+        }
+
+        // Open Play Store Details Modal
+        window.openAppDetails = function(appId) {
+            const apps = getApps();
+            const app = apps.find(a => a.id === appId);
+            if (!app) return;
+
+            currentlyOpenedAppId = appId;
+            const avgRating = getAverageRating(app);
+            const reviewCount = app.reviews ? app.reviews.length : 0;
+
+            document.getElementById("modalCategoryBadge").innerText = app.category.toUpperCase();
+            document.getElementById("modalAppName").innerText = app.name;
+            document.getElementById("modalAppDev").innerText = app.developer;
+            document.getElementById("modalAppIcon").innerHTML = formatIconHTML(app.icon);
+            document.getElementById("modalAppIcon").style.background = app.gradient || 'linear-gradient(135deg, #6366f1, #a855f7)';
+            document.getElementById("modalRatingVal").innerText = `${avgRating} ★`;
+            document.getElementById("modalReviewsCount").innerText = `${reviewCount} Reviews`;
+            document.getElementById("modalSizeVal").innerText = app.size;
+            document.getElementById("modalVersionVal").innerText = `v${app.version}`;
+            document.getElementById("modalDownloadBtn").href = app.downloadUrl;
+            document.getElementById("modalAppDesc").innerText = app.description;
+            document.getElementById("modalRatingOverview").innerText = `★ ${avgRating} / 5 (${reviewCount} total ratings)`;
+
+            // Render Reviews List
+            renderModalReviewsList(app);
+
+            // Open Modal
+            document.getElementById("appDetailsModal").classList.add("active");
+
+            // Update URL hash without reloading
+            history.replaceState(null, null, `?app=${app.id}`);
+        };
+
+        window.closeDetailsModal = function() {
+            document.getElementById("appDetailsModal").classList.remove("active");
+            currentlyOpenedAppId = null;
+            history.replaceState(null, null, window.location.pathname);
+        };
+
+        // Render Reviews inside details modal
+        function renderModalReviewsList(app) {
+            const listEl = document.getElementById("modalReviewsList");
+            if (!listEl) return;
+
+            if (!app.reviews || app.reviews.length === 0) {
+                listEl.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem; padding: 10px 0;">No reviews yet. Be the first to review this application!</p>`;
+                return;
+            }
+
+            listEl.innerHTML = app.reviews.slice().reverse().map(rev => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="review-author">${rev.author}</span>
+                        <span class="review-stars">${"★".repeat(rev.stars)}${"☆".repeat(5 - rev.stars)}</span>
+                    </div>
+                    <p class="review-comment">${rev.comment}</p>
+                </div>
+            `).join("");
+        }
+
+        // Star Rating Selector Logic
+        const stars = document.querySelectorAll("#starRatingSelector .star-item");
+        stars.forEach(star => {
+            star.addEventListener("click", () => {
+                selectedReviewRating = parseInt(star.getAttribute("data-value"));
+                stars.forEach(s => {
+                    const val = parseInt(s.getAttribute("data-value"));
+                    if (val <= selectedReviewRating) {
+                        s.classList.add("selected");
+                    } else {
+                        s.classList.remove("selected");
+                    }
+                });
+            });
+        });
+
+        // Submit User Review
+        window.submitUserReview = function() {
+            if (!currentlyOpenedAppId) return;
+
+            const authorInput = document.getElementById("reviewAuthorInput");
+            const commentInput = document.getElementById("reviewCommentInput");
+            const author = authorInput.value.trim() || "Verified User";
+            const comment = commentInput.value.trim();
+
+            if (!comment) {
+                alert("Please write a short comment about the app!");
+                return;
+            }
+
+            let apps = getApps();
+            const appIndex = apps.findIndex(a => a.id === currentlyOpenedAppId);
+            if (appIndex === -1) return;
+
+            if (!apps[appIndex].reviews) {
+                apps[appIndex].reviews = [];
+            }
+
+            apps[appIndex].reviews.push({
+                author: author,
+                stars: selectedReviewRating,
+                comment: comment
+            });
+
+            saveApps(apps);
+            authorInput.value = "";
+            commentInput.value = "";
+
+            // Re-render modal and store
+            openAppDetails(currentlyOpenedAppId);
+            renderStoreApps();
+            showToast("⭐ Thank you! Your review has been posted.");
+        };
+
+        // Share App Function (Native Web Share + Clipboard Fallback)
+        window.shareSpecificApp = function(appId, event) {
+            if (event) event.stopPropagation();
+
+            const apps = getApps();
+            const app = apps.find(a => a.id === appId);
+            if (!app) return;
+
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set("app", app.id);
+            const shareUrl = currentUrl.toString();
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `${app.name} APK Download | AK STAR STORE`,
+                    text: `Download ${app.name} (v${app.version}, ${app.size}) directly from AK STAR STORE:`,
+                    url: shareUrl
+                }).catch(() => {
+                    copyToClipboard(shareUrl, app.name);
+                });
+            } else {
+                copyToClipboard(shareUrl, app.name);
+            }
+        };
+
+        window.shareCurrentModalApp = function() {
+            if (currentlyOpenedAppId) {
+                shareSpecificApp(currentlyOpenedAppId, null);
+            }
+        };
+
+        function copyToClipboard(url, appName) {
+            navigator.clipboard.writeText(url).then(() => {
+                showToast(`🔗 Link for ${appName} copied to clipboard!`);
+            }).catch(() => {
+                prompt("Copy this link to share:", url);
+            });
+        }
+
+        // Render Managed Apps inside Admin Dashboard with Edit & Delete options
+        function renderAdminList() {
+            const adminAppList = document.getElementById("adminAppList");
+            if (!adminAppList) return;
+            
+            const apps = getApps();
+            adminAppList.innerHTML = "";
+
+            if (apps.length === 0) {
+                adminAppList.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">No apps currently active in store.</p>`;
+                return;
+            }
+
+            apps.forEach(app => {
+                const item = document.createElement("div");
+                item.className = "admin-item-card";
+                item.innerHTML = `
+                    <div class="admin-item-info">
+                        <span class="admin-item-icon">${formatIconHTML(app.icon)}</span>
+                        <div class="admin-item-details">
+                            <h4>${app.name}</h4>
+                            <span>${app.version} • ${app.size} • ${app.category}</span>
+                        </div>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="btn-edit" onclick="startEditingApp('${app.id}')">Edit</button>
+                        <button class="btn-delete" onclick="deleteApp('${app.id}')">Delete</button>
+                    </div>
+                `;
+                adminAppList.appendChild(item);
+            });
+        }
+
+        // Start Editing an existing app
+        window.startEditingApp = function(id) {
+            const apps = getApps();
+            const app = apps.find(a => a.id === id);
+            if (!app) return;
+
+            document.getElementById("editingAppId").value = app.id;
+            document.getElementById("appNameInput").value = app.name;
+            document.getElementById("appDevInput").value = app.developer;
+            document.getElementById("appCategoryInput").value = app.category;
+            document.getElementById("appVersionInput").value = app.version;
+            document.getElementById("appSizeInput").value = app.size;
+            document.getElementById("appIconInput").value = app.icon;
+            document.getElementById("appDownloadUrlInput").value = app.downloadUrl;
+            document.getElementById("appDescInput").value = app.description;
+
+            document.getElementById("formSectionTitle").innerText = `Update App: ${app.name}`;
+            document.getElementById("submitAppBtn").innerText = "Update App Details";
+            document.getElementById("cancelEditBtn").style.display = "block";
+
+            document.querySelector(".dashboard-card").scrollTo({ top: 120, behavior: "smooth" });
+        };
+
+        // Cancel Editing mode
+        window.cancelEditing = function() {
+            document.getElementById("editingAppId").value = "";
+            document.getElementById("addAppForm").reset();
+            document.getElementById("formSectionTitle").innerText = "Add / Upload App Details";
+            document.getElementById("submitAppBtn").innerText = "Add App To Store";
+            document.getElementById("cancelEditBtn").style.display = "none";
+        };
+
+        // Delete App
+        window.deleteApp = function(id) {
+            if (confirm("Are you sure you want to remove this app from the store?")) {
+                let apps = getApps();
+                apps = apps.filter(item => item.id !== id);
+                saveApps(apps);
+                
+                if (document.getElementById("editingAppId").value === id) {
+                    cancelEditing();
+                }
+
+                renderStoreApps();
+                renderAdminList();
+            }
+        };
+
+        // Handle Form Submission (Add or Update)
+        window.handleAppSubmit = function(e) {
+            if (e) e.preventDefault();
+
+            const editingId = document.getElementById("editingAppId").value.trim();
+            const name = document.getElementById("appNameInput").value.trim();
+            const dev = document.getElementById("appDevInput").value.trim();
+            const category = document.getElementById("appCategoryInput").value;
+            const version = document.getElementById("appVersionInput").value.trim();
+            const size = document.getElementById("appSizeInput").value.trim();
+            const icon = document.getElementById("appIconInput").value.trim() || "📱";
+            const downloadUrl = document.getElementById("appDownloadUrlInput").value.trim();
+            const desc = document.getElementById("appDescInput").value.trim();
+
+            let apps = getApps();
+
+            if (editingId) {
+                const index = apps.findIndex(a => a.id === editingId);
+                if (index !== -1) {
+                    apps[index] = {
+                        ...apps[index],
+                        name: name,
+                        developer: dev,
+                        category: category,
+                        version: version,
+                        size: size,
+                        icon: icon,
+                        downloadUrl: downloadUrl,
+                        description: desc
+                    };
+                    saveApps(apps);
+                    cancelEditing();
+                    alert("App updated successfully in AK STAR STORE!");
+                }
+            } else {
+                const newApp = {
+                    id: "app-" + Date.now(),
+                    name: name,
+                    developer: dev,
+                    category: category,
+                    version: version,
+                    size: size,
+                    icon: icon,
+                    gradient: "linear-gradient(135deg, #6366f1, #a855f7)",
+                    downloadUrl: downloadUrl,
+                    description: desc,
+                    rating: 5.0,
+                    reviews: []
+                };
+                apps.unshift(newApp);
+                saveApps(apps);
+                document.getElementById("addAppForm").reset();
+                alert("New App published to AK STAR STORE successfully!");
+            }
+
+            renderStoreApps();
+            renderAdminList();
+        };
+
+        window.selectCategory = function(cat, buttonEl) {
+            currentCategory = cat;
+            const allButtons = document.querySelectorAll(".categories .chip");
+            allButtons.forEach(b => b.classList.remove("active"));
+            if (buttonEl) {
+                buttonEl.classList.add("active");
+            }
+            renderStoreApps();
+        };
+
+        window.openAuthModal = function() {
+            const authModal = document.getElementById("authModal");
+            const secretKeyInput = document.getElementById("secretKeyInput");
+            const authErrorMsg = document.getElementById("authErrorMsg");
+            
+            if (authModal) {
+                authModal.classList.add("active");
+                if (secretKeyInput) {
+                    secretKeyInput.value = "";
+                    secretKeyInput.focus();
+                }
+                if (authErrorMsg) {
+                    authErrorMsg.style.display = "none";
+                }
+            }
+        };
+
+        window.closeAuthModalFunc = function() {
+            const authModal = document.getElementById("authModal");
+            if (authModal) {
+                authModal.classList.remove("active");
+            }
+        };
+
+        window.closeDashboardModalFunc = function() {
+            const adminDashboardModal = document.getElementById("adminDashboardModal");
+            if (adminDashboardModal) {
+                adminDashboardModal.classList.remove("active");
+            }
+        };
+
+        window.verifyAdminAccess = function() {
+            const secretKeyInput = document.getElementById("secretKeyInput");
+            const authErrorMsg = document.getElementById("authErrorMsg");
+            const authModal = document.getElementById("authModal");
+            const adminDashboardModal = document.getElementById("adminDashboardModal");
+
+            if (!secretKeyInput) return;
+            const enteredKey = secretKeyInput.value.trim();
+
+            if (enteredKey === SECRET_ADMIN_KEY) {
+                if (authModal) authModal.classList.remove("active");
+                if (adminDashboardModal) adminDashboardModal.classList.add("active");
+                renderCategoryUI();
+                renderAdminList();
+            } else {
+                if (authErrorMsg) authErrorMsg.style.display = "block";
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const searchInput = document.getElementById("searchInput");
+            if (searchInput) {
+                searchInput.addEventListener("input", (e) => {
+                    searchQuery = e.target.value.trim();
+                    renderStoreApps();
+                });
+            }
+
+            const secretKeyInput = document.getElementById("secretKeyInput");
+            if (secretKeyInput) {
+                secretKeyInput.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter") {
+                        verifyAdminAccess();
+                    }
+                });
+            }
+
+            const newCategoryInput = document.getElementById("newCategoryInput");
+            if (newCategoryInput) {
+                newCategoryInput.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        addNewCategory();
+                    }
+                });
+            }
+
+            window.addEventListener("click", (e) => {
+                const authModal = document.getElementById("authModal");
+                const adminDashboardModal = document.getElementById("adminDashboardModal");
+                const appDetailsModal = document.getElementById("appDetailsModal");
+                if (e.target === authModal) closeAuthModalFunc();
+                if (e.target === adminDashboardModal) closeDashboardModalFunc();
+                if (e.target === appDetailsModal) closeDetailsModal();
+            });
+
+            renderCategoryUI();
+            renderStoreApps();
+
+            // Check if URL has ?app=appId (Direct link share detection)
+            const urlParams = new URLSearchParams(window.location.search);
+            const directAppId = urlParams.get("app");
+            if (directAppId) {
+                setTimeout(() => {
+                    openAppDetails(directAppId);
+                }, 200);
+            }
+        });
+    </script>
+</body>
+</html>
