@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +8,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK (Compat Version for Easy Setup) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --bg-dark: #0a0b10;
@@ -313,7 +317,7 @@
             display: block;
         }
 
-        /* Play Store Stats in Card */
+        /* Stats Row */
         .app-stats-row {
             display: flex;
             align-items: center;
@@ -355,7 +359,7 @@
             overflow: hidden;
         }
 
-        /* Card Button Actions (Download + Share) */
+        /* Card Button Actions */
         .card-actions {
             display: flex;
             gap: 10px;
@@ -409,7 +413,7 @@
             transform: scale(1.05);
         }
 
-        /* Modals Generic */
+        /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -476,7 +480,7 @@
             color: var(--text-primary);
         }
 
-        /* Play Store App Details Modal Inside UI */
+        /* Play Store Details Modal */
         .details-hero {
             display: flex;
             gap: 20px;
@@ -514,7 +518,6 @@
             font-weight: 600;
         }
 
-        /* Play Store Badges Row */
         .playstore-badges-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -555,7 +558,7 @@
             margin-bottom: 28px;
         }
 
-        /* Play Store Reviews Section */
+        /* Reviews Section */
         .reviews-section {
             margin-top: 28px;
             border-top: 1px solid var(--border-color);
@@ -570,7 +573,6 @@
             justify-content: space-between;
         }
 
-        /* Write Review Box */
         .write-review-box {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-color);
@@ -971,7 +973,7 @@
 
         <!-- Dynamic Category Filters Container -->
         <div class="categories" id="categoriesContainer">
-            <!-- Populated via JavaScript dynamically -->
+            <!-- Populated via Firebase Realtime Listener -->
         </div>
 
         <!-- Dynamic Apps Grid -->
@@ -1189,14 +1191,34 @@
         </div>
     </div>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript & Realtime Database Logic -->
     <script>
         const SECRET_ADMIN_KEY = "Ak732888";
 
-        // Initial default categories
-        const initialCategories = ["AI Tools", "Music & Audio", "Utilities", "Games"];
+        // ==========================================
+        // 🔥 CONFIGURED FIREBASE SETTINGS 🔥
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyAsnOZR6U_plbwtS7DddfsU0IfBPS0976s",
+            authDomain: "ak-star-mod.firebaseapp.com",
+            databaseURL: "https://ak-star-mod-default-rtdb.firebaseio.com",
+            projectId: "ak-star-mod",
+            storageBucket: "ak-star-mod.firebasestorage.app",
+            messagingSenderId: "79199991402",
+            appId: "1:79199991402:android:9c180a7fde7b6cd6897c13"
+        };
 
-        // Initial Apps Seed Data with Reviews & Play Store Rating Fields
+        // Initialize Firebase Firestore
+        let db = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+        } catch (e) {
+            console.error("Firebase Init Error:", e);
+        }
+
+        // Fallback / Initial Seed Data
+        const initialCategories = ["AI Tools", "Music & Audio", "Utilities", "Games"];
         const initialApps = [
             {
                 id: "app-1",
@@ -1249,42 +1271,8 @@
             }
         ];
 
-        // Categories Storage Helpers
-        function getCategories() {
-            const saved = localStorage.getItem("ak_star_categories");
-            if (!saved) {
-                localStorage.setItem("ak_star_categories", JSON.stringify(initialCategories));
-                return initialCategories;
-            }
-            try {
-                return JSON.parse(saved);
-            } catch (e) {
-                return initialCategories;
-            }
-        }
-
-        function saveCategories(cats) {
-            localStorage.setItem("ak_star_categories", JSON.stringify(cats));
-        }
-
-        // Apps Storage Helpers
-        function getApps() {
-            const saved = localStorage.getItem("ak_star_apps");
-            if (!saved) {
-                localStorage.setItem("ak_star_apps", JSON.stringify(initialApps));
-                return initialApps;
-            }
-            try {
-                return JSON.parse(saved);
-            } catch (e) {
-                return initialApps;
-            }
-        }
-
-        function saveApps(apps) {
-            localStorage.setItem("ak_star_apps", JSON.stringify(apps));
-        }
-
+        let liveApps = [];
+        let liveCategories = [];
         let currentCategory = "All";
         let searchQuery = "";
         let currentlyOpenedAppId = null;
@@ -1301,7 +1289,7 @@
             }, 3000);
         }
 
-        // Format Logo / Image Element with referrer-policy and fallback support
+        // Logo formatting
         function formatIconHTML(iconStr) {
             if (iconStr && (iconStr.startsWith("http://") || iconStr.startsWith("https://") || iconStr.startsWith("data:image"))) {
                 return `<img src="${iconStr}" alt="Logo" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.style.display='none'; this.parentElement.innerText='📱';">`;
@@ -1309,41 +1297,96 @@
             return iconStr || "📱";
         }
 
-        // Helper: Calculate average rating
         function getAverageRating(app) {
             if (!app.reviews || app.reviews.length === 0) return app.rating || 5.0;
             const sum = app.reviews.reduce((acc, r) => acc + Number(r.stars), 0);
             return (sum / app.reviews.length).toFixed(1);
         }
 
-        // Render Category Filter Chips and Form Dropdown
-        function renderCategoryUI() {
-            const categories = getCategories();
+        // ==========================================
+        // ⚡ REAL-TIME LISTENERS (SYNC EVERY DEVICE)
+        // ==========================================
+        function initRealtimeListeners() {
+            if (db) {
+                // 1. Categories Real-Time Sync
+                db.collection("store_meta").doc("categories").onSnapshot((doc) => {
+                    if (doc.exists && doc.data().list) {
+                        liveCategories = doc.data().list;
+                    } else {
+                        liveCategories = initialCategories;
+                        db.collection("store_meta").doc("categories").set({ list: initialCategories });
+                    }
+                    renderCategoryUI();
+                    renderStoreApps();
+                }, (err) => {
+                    console.error("Firestore Category Error:", err);
+                    useLocalStorageFallback();
+                });
 
-            // 1. Render Top Filter Chips
+                // 2. Apps Real-Time Sync (Worldwide Instant Update)
+                db.collection("apps").onSnapshot((snapshot) => {
+                    if (!snapshot.empty) {
+                        liveApps = [];
+                        snapshot.forEach((doc) => {
+                            liveApps.push({ id: doc.id, ...doc.data() });
+                        });
+                    } else {
+                        liveApps = initialApps;
+                        initialApps.forEach(item => {
+                            const { id, ...data } = item;
+                            db.collection("apps").doc(id).set(data);
+                        });
+                    }
+                    renderStoreApps();
+                    renderAdminList();
+
+                    if (currentlyOpenedAppId) {
+                        openAppDetails(currentlyOpenedAppId, false);
+                    }
+                }, (err) => {
+                    console.error("Firestore Apps Error:", err);
+                    useLocalStorageFallback();
+                });
+            } else {
+                useLocalStorageFallback();
+            }
+        }
+
+        function useLocalStorageFallback() {
+            const savedCats = localStorage.getItem("ak_star_categories");
+            liveCategories = savedCats ? JSON.parse(savedCats) : initialCategories;
+
+            const savedApps = localStorage.getItem("ak_star_apps");
+            liveApps = savedApps ? JSON.parse(savedApps) : initialApps;
+
+            renderCategoryUI();
+            renderStoreApps();
+            renderAdminList();
+        }
+
+        // Render Categories
+        function renderCategoryUI() {
             const container = document.getElementById("categoriesContainer");
             if (container) {
                 let html = `<button class="chip ${currentCategory === 'All' ? 'active' : ''}" onclick="selectCategory('All', this)">All Apps</button>`;
-                categories.forEach(cat => {
+                liveCategories.forEach(cat => {
                     html += `<button class="chip ${currentCategory === cat ? 'active' : ''}" onclick="selectCategory('${cat}', this)">${cat}</button>`;
                 });
                 container.innerHTML = html;
             }
 
-            // 2. Render Form Select Options
             const selectEl = document.getElementById("appCategoryInput");
             if (selectEl) {
                 const prevVal = selectEl.value;
-                selectEl.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
-                if (categories.includes(prevVal)) {
+                selectEl.innerHTML = liveCategories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
+                if (liveCategories.includes(prevVal)) {
                     selectEl.value = prevVal;
                 }
             }
 
-            // 3. Render Admin Category Badges in Dashboard
             const adminTagsContainer = document.getElementById("adminCategoryTags");
             if (adminTagsContainer) {
-                adminTagsContainer.innerHTML = categories.map(cat => `
+                adminTagsContainer.innerHTML = liveCategories.map(cat => `
                     <div class="cat-badge">
                         <span>${cat}</span>
                         <button class="cat-del-btn" title="Delete Category" onclick="removeCategory('${cat}')">&times;</button>
@@ -1352,8 +1395,8 @@
             }
         }
 
-        // Add Category Function
-        window.addNewCategory = function() {
+        // Add Category
+        window.addNewCategory = async function() {
             const input = document.getElementById("newCategoryInput");
             const val = input.value.trim();
             if (!val) {
@@ -1361,48 +1404,53 @@
                 return;
             }
 
-            let categories = getCategories();
-            if (categories.some(c => c.toLowerCase() === val.toLowerCase()) || val.toLowerCase() === "all") {
+            if (liveCategories.some(c => c.toLowerCase() === val.toLowerCase()) || val.toLowerCase() === "all") {
                 alert("This category already exists!");
                 return;
             }
 
-            categories.push(val);
-            saveCategories(categories);
+            const updated = [...liveCategories, val];
             input.value = "";
-            renderCategoryUI();
-            renderStoreApps();
-        };
 
-        // Remove Category Function
-        window.removeCategory = function(catToRemove) {
-            if (confirm(`Are you sure you want to remove the category "${catToRemove}"?`)) {
-                let categories = getCategories();
-                categories = categories.filter(c => c !== catToRemove);
-                saveCategories(categories);
-
-                if (currentCategory === catToRemove) {
-                    currentCategory = "All";
-                }
-
+            if (db) {
+                await db.collection("store_meta").doc("categories").set({ list: updated });
+            } else {
+                liveCategories = updated;
+                localStorage.setItem("ak_star_categories", JSON.stringify(liveCategories));
                 renderCategoryUI();
                 renderStoreApps();
             }
         };
 
-        // Render Apps on Store Front with Share Button and Click-to-Open Details
+        // Remove Category
+        window.removeCategory = async function(catToRemove) {
+            if (confirm(`Are you sure you want to remove the category "${catToRemove}"?`)) {
+                const updated = liveCategories.filter(c => c !== catToRemove);
+                if (currentCategory === catToRemove) currentCategory = "All";
+
+                if (db) {
+                    await db.collection("store_meta").doc("categories").set({ list: updated });
+                } else {
+                    liveCategories = updated;
+                    localStorage.setItem("ak_star_categories", JSON.stringify(liveCategories));
+                    renderCategoryUI();
+                    renderStoreApps();
+                }
+            }
+        };
+
+        // Render Apps
         function renderStoreApps() {
             const appsGrid = document.getElementById("appsGrid");
             if (!appsGrid) return;
             
-            const apps = getApps();
             appsGrid.innerHTML = "";
 
-            const filtered = apps.filter(app => {
+            const filtered = liveApps.filter(app => {
                 const matchesCategory = currentCategory === "All" || app.category === currentCategory;
-                const matchesSearch = app.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                      app.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                      app.developer.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesSearch = (app.name || "").toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      (app.description || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                      (app.developer || "").toLowerCase().includes(searchQuery.toLowerCase());
                 return matchesCategory && matchesSearch;
             });
 
@@ -1463,17 +1511,16 @@
             });
         }
 
-        // Open Play Store Details Modal
-        window.openAppDetails = function(appId) {
-            const apps = getApps();
-            const app = apps.find(a => a.id === appId);
+        // Open Details Modal
+        window.openAppDetails = function(appId, updateHistory = true) {
+            const app = liveApps.find(a => a.id === appId);
             if (!app) return;
 
             currentlyOpenedAppId = appId;
             const avgRating = getAverageRating(app);
             const reviewCount = app.reviews ? app.reviews.length : 0;
 
-            document.getElementById("modalCategoryBadge").innerText = app.category.toUpperCase();
+            document.getElementById("modalCategoryBadge").innerText = (app.category || "APP").toUpperCase();
             document.getElementById("modalAppName").innerText = app.name;
             document.getElementById("modalAppDev").innerText = app.developer;
             document.getElementById("modalAppIcon").innerHTML = formatIconHTML(app.icon);
@@ -1486,14 +1533,13 @@
             document.getElementById("modalAppDesc").innerText = app.description;
             document.getElementById("modalRatingOverview").innerText = `★ ${avgRating} / 5 (${reviewCount} total ratings)`;
 
-            // Render Reviews List
             renderModalReviewsList(app);
 
-            // Open Modal
             document.getElementById("appDetailsModal").classList.add("active");
 
-            // Update URL hash without reloading
-            history.replaceState(null, null, `?app=${app.id}`);
+            if (updateHistory) {
+                history.replaceState(null, null, `?app=${app.id}`);
+            }
         };
 
         window.closeDetailsModal = function() {
@@ -1502,7 +1548,6 @@
             history.replaceState(null, null, window.location.pathname);
         };
 
-        // Render Reviews inside details modal
         function renderModalReviewsList(app) {
             const listEl = document.getElementById("modalReviewsList");
             if (!listEl) return;
@@ -1523,7 +1568,7 @@
             `).join("");
         }
 
-        // Star Rating Selector Logic
+        // Star Rating Selector
         const stars = document.querySelectorAll("#starRatingSelector .star-item");
         stars.forEach(star => {
             star.addEventListener("click", () => {
@@ -1540,7 +1585,7 @@
         });
 
         // Submit User Review
-        window.submitUserReview = function() {
+        window.submitUserReview = async function() {
             if (!currentlyOpenedAppId) return;
 
             const authorInput = document.getElementById("reviewAuthorInput");
@@ -1553,36 +1598,36 @@
                 return;
             }
 
-            let apps = getApps();
-            const appIndex = apps.findIndex(a => a.id === currentlyOpenedAppId);
-            if (appIndex === -1) return;
+            const app = liveApps.find(a => a.id === currentlyOpenedAppId);
+            if (!app) return;
 
-            if (!apps[appIndex].reviews) {
-                apps[appIndex].reviews = [];
-            }
-
-            apps[appIndex].reviews.push({
+            const updatedReviews = [...(app.reviews || []), {
                 author: author,
                 stars: selectedReviewRating,
                 comment: comment
-            });
+            }];
 
-            saveApps(apps);
+            if (db) {
+                await db.collection("apps").doc(currentlyOpenedAppId).update({
+                    reviews: updatedReviews
+                });
+            } else {
+                app.reviews = updatedReviews;
+                localStorage.setItem("ak_star_apps", JSON.stringify(liveApps));
+                openAppDetails(currentlyOpenedAppId);
+                renderStoreApps();
+            }
+
             authorInput.value = "";
             commentInput.value = "";
-
-            // Re-render modal and store
-            openAppDetails(currentlyOpenedAppId);
-            renderStoreApps();
             showToast("⭐ Thank you! Your review has been posted.");
         };
 
-        // Share App Function (Native Web Share + Clipboard Fallback)
+        // Share App
         window.shareSpecificApp = function(appId, event) {
             if (event) event.stopPropagation();
 
-            const apps = getApps();
-            const app = apps.find(a => a.id === appId);
+            const app = liveApps.find(a => a.id === appId);
             if (!app) return;
 
             const currentUrl = new URL(window.location.href);
@@ -1616,20 +1661,19 @@
             });
         }
 
-        // Render Managed Apps inside Admin Dashboard with Edit & Delete options
+        // Admin Management List
         function renderAdminList() {
             const adminAppList = document.getElementById("adminAppList");
             if (!adminAppList) return;
             
-            const apps = getApps();
             adminAppList.innerHTML = "";
 
-            if (apps.length === 0) {
+            if (liveApps.length === 0) {
                 adminAppList.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">No apps currently active in store.</p>`;
                 return;
             }
 
-            apps.forEach(app => {
+            liveApps.forEach(app => {
                 const item = document.createElement("div");
                 item.className = "admin-item-card";
                 item.innerHTML = `
@@ -1649,21 +1693,19 @@
             });
         }
 
-        // Start Editing an existing app
         window.startEditingApp = function(id) {
-            const apps = getApps();
-            const app = apps.find(a => a.id === id);
+            const app = liveApps.find(a => a.id === id);
             if (!app) return;
 
             document.getElementById("editingAppId").value = app.id;
-            document.getElementById("appNameInput").value = app.name;
-            document.getElementById("appDevInput").value = app.developer;
-            document.getElementById("appCategoryInput").value = app.category;
-            document.getElementById("appVersionInput").value = app.version;
-            document.getElementById("appSizeInput").value = app.size;
-            document.getElementById("appIconInput").value = app.icon;
-            document.getElementById("appDownloadUrlInput").value = app.downloadUrl;
-            document.getElementById("appDescInput").value = app.description;
+            document.getElementById("appNameInput").value = app.name || "";
+            document.getElementById("appDevInput").value = app.developer || "";
+            document.getElementById("appCategoryInput").value = app.category || "";
+            document.getElementById("appVersionInput").value = app.version || "";
+            document.getElementById("appSizeInput").value = app.size || "";
+            document.getElementById("appIconInput").value = app.icon || "";
+            document.getElementById("appDownloadUrlInput").value = app.downloadUrl || "";
+            document.getElementById("appDescInput").value = app.description || "";
 
             document.getElementById("formSectionTitle").innerText = `Update App: ${app.name}`;
             document.getElementById("submitAppBtn").innerText = "Update App Details";
@@ -1672,7 +1714,6 @@
             document.querySelector(".dashboard-card").scrollTo({ top: 120, behavior: "smooth" });
         };
 
-        // Cancel Editing mode
         window.cancelEditing = function() {
             document.getElementById("editingAppId").value = "";
             document.getElementById("addAppForm").reset();
@@ -1681,24 +1722,24 @@
             document.getElementById("cancelEditBtn").style.display = "none";
         };
 
-        // Delete App
-        window.deleteApp = function(id) {
+        window.deleteApp = async function(id) {
             if (confirm("Are you sure you want to remove this app from the store?")) {
-                let apps = getApps();
-                apps = apps.filter(item => item.id !== id);
-                saveApps(apps);
-                
+                if (db) {
+                    await db.collection("apps").doc(id).delete();
+                } else {
+                    liveApps = liveApps.filter(item => item.id !== id);
+                    localStorage.setItem("ak_star_apps", JSON.stringify(liveApps));
+                    renderStoreApps();
+                    renderAdminList();
+                }
+
                 if (document.getElementById("editingAppId").value === id) {
                     cancelEditing();
                 }
-
-                renderStoreApps();
-                renderAdminList();
             }
         };
 
-        // Handle Form Submission (Add or Update)
-        window.handleAppSubmit = function(e) {
+        window.handleAppSubmit = async function(e) {
             if (e) e.preventDefault();
 
             const editingId = document.getElementById("editingAppId").value.trim();
@@ -1711,29 +1752,34 @@
             const downloadUrl = document.getElementById("appDownloadUrlInput").value.trim();
             const desc = document.getElementById("appDescInput").value.trim();
 
-            let apps = getApps();
-
             if (editingId) {
-                const index = apps.findIndex(a => a.id === editingId);
-                if (index !== -1) {
-                    apps[index] = {
-                        ...apps[index],
-                        name: name,
-                        developer: dev,
-                        category: category,
-                        version: version,
-                        size: size,
-                        icon: icon,
-                        downloadUrl: downloadUrl,
-                        description: desc
-                    };
-                    saveApps(apps);
-                    cancelEditing();
-                    alert("App updated successfully in AK STAR STORE!");
+                const appData = {
+                    name: name,
+                    developer: dev,
+                    category: category,
+                    version: version,
+                    size: size,
+                    icon: icon,
+                    downloadUrl: downloadUrl,
+                    description: desc
+                };
+
+                if (db) {
+                    await db.collection("apps").doc(editingId).update(appData);
+                } else {
+                    const idx = liveApps.findIndex(a => a.id === editingId);
+                    if (idx !== -1) {
+                        liveApps[idx] = { ...liveApps[idx], ...appData };
+                        localStorage.setItem("ak_star_apps", JSON.stringify(liveApps));
+                        renderStoreApps();
+                        renderAdminList();
+                    }
                 }
+                cancelEditing();
+                alert("App updated successfully across all devices!");
             } else {
-                const newApp = {
-                    id: "app-" + Date.now(),
+                const newId = "app-" + Date.now();
+                const newAppData = {
                     name: name,
                     developer: dev,
                     category: category,
@@ -1746,14 +1792,19 @@
                     rating: 5.0,
                     reviews: []
                 };
-                apps.unshift(newApp);
-                saveApps(apps);
-                document.getElementById("addAppForm").reset();
-                alert("New App published to AK STAR STORE successfully!");
-            }
 
-            renderStoreApps();
-            renderAdminList();
+                if (db) {
+                    await db.collection("apps").doc(newId).set(newAppData);
+                } else {
+                    liveApps.unshift({ id: newId, ...newAppData });
+                    localStorage.setItem("ak_star_apps", JSON.stringify(liveApps));
+                    renderStoreApps();
+                    renderAdminList();
+                }
+
+                document.getElementById("addAppForm").reset();
+                alert("New App published live to AK STAR STORE!");
+            }
         };
 
         window.selectCategory = function(cat, buttonEl) {
@@ -1785,16 +1836,12 @@
 
         window.closeAuthModalFunc = function() {
             const authModal = document.getElementById("authModal");
-            if (authModal) {
-                authModal.classList.remove("active");
-            }
+            if (authModal) authModal.classList.remove("active");
         };
 
         window.closeDashboardModalFunc = function() {
             const adminDashboardModal = document.getElementById("adminDashboardModal");
-            if (adminDashboardModal) {
-                adminDashboardModal.classList.remove("active");
-            }
+            if (adminDashboardModal) adminDashboardModal.classList.remove("active");
         };
 
         window.verifyAdminAccess = function() {
@@ -1828,9 +1875,7 @@
             const secretKeyInput = document.getElementById("secretKeyInput");
             if (secretKeyInput) {
                 secretKeyInput.addEventListener("keypress", (e) => {
-                    if (e.key === "Enter") {
-                        verifyAdminAccess();
-                    }
+                    if (e.key === "Enter") verifyAdminAccess();
                 });
             }
 
@@ -1853,16 +1898,16 @@
                 if (e.target === appDetailsModal) closeDetailsModal();
             });
 
-            renderCategoryUI();
-            renderStoreApps();
+            // Start Realtime Database Listening
+            initRealtimeListeners();
 
-            // Check if URL has ?app=appId (Direct link share detection)
+            // Detect direct shared link query (?app=appId)
             const urlParams = new URLSearchParams(window.location.search);
             const directAppId = urlParams.get("app");
             if (directAppId) {
                 setTimeout(() => {
                     openAppDetails(directAppId);
-                }, 200);
+                }, 400);
             }
         });
     </script>
