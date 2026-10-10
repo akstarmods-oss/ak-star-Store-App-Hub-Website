@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK (Compat Version for Easy Setup) -->
+    <!-- Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
@@ -1128,7 +1128,6 @@
                 <div class="dashboard-section form-section">
                     <h3 id="formSectionTitle">Add / Upload App Details</h3>
                     <form id="addAppForm" onsubmit="handleAppSubmit(event)">
-                        <!-- Hidden ID to track edit mode -->
                         <input type="hidden" id="editingAppId" value="">
 
                         <div class="form-row">
@@ -1195,9 +1194,7 @@
     <script>
         const SECRET_ADMIN_KEY = "Ak732888";
 
-        // ==========================================
-        // 🔥 CONFIGURED FIREBASE SETTINGS 🔥
-        // ==========================================
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAsnOZR6U_plbwtS7DddfsU0IfBPS0976s",
             authDomain: "ak-star-mod.firebaseapp.com",
@@ -1208,7 +1205,6 @@
             appId: "1:79199991402:android:9c180a7fde7b6cd6897c13"
         };
 
-        // Initialize Firebase Firestore
         let db = null;
         try {
             firebase.initializeApp(firebaseConfig);
@@ -1217,7 +1213,6 @@
             console.error("Firebase Init Error:", e);
         }
 
-        // Fallback / Initial Seed Data
         const initialCategories = ["AI Tools", "Music & Audio", "Utilities", "Games"];
         const initialApps = [
             {
@@ -1277,8 +1272,8 @@
         let searchQuery = "";
         let currentlyOpenedAppId = null;
         let selectedReviewRating = 5;
+        let hasCheckedDirectAppParam = false;
 
-        // Toast Helper
         function showToast(msg) {
             const toast = document.getElementById("toastAlert");
             if (!toast) return;
@@ -1289,7 +1284,6 @@
             }, 3000);
         }
 
-        // Logo formatting
         function formatIconHTML(iconStr) {
             if (iconStr && (iconStr.startsWith("http://") || iconStr.startsWith("https://") || iconStr.startsWith("data:image"))) {
                 return `<img src="${iconStr}" alt="Logo" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.style.display='none'; this.parentElement.innerText='📱';">`;
@@ -1303,12 +1297,23 @@
             return (sum / app.reviews.length).toFixed(1);
         }
 
-        // ==========================================
-        // ⚡ REAL-TIME LISTENERS (SYNC EVERY DEVICE)
-        // ==========================================
+        // Check and open app popup automatically from URL parameter
+        function checkAndOpenDirectApp() {
+            if (hasCheckedDirectAppParam) return;
+            const urlParams = new URLSearchParams(window.location.search);
+            const directAppId = urlParams.get("app");
+            if (directAppId && liveApps.length > 0) {
+                const targetApp = liveApps.find(a => a.id === directAppId);
+                if (targetApp) {
+                    hasCheckedDirectAppParam = true;
+                    openAppDetails(directAppId, false);
+                }
+            }
+        }
+
+        // Realtime sync
         function initRealtimeListeners() {
             if (db) {
-                // 1. Categories Real-Time Sync
                 db.collection("store_meta").doc("categories").onSnapshot((doc) => {
                     if (doc.exists && doc.data().list) {
                         liveCategories = doc.data().list;
@@ -1323,7 +1328,6 @@
                     useLocalStorageFallback();
                 });
 
-                // 2. Apps Real-Time Sync (Worldwide Instant Update)
                 db.collection("apps").onSnapshot((snapshot) => {
                     if (!snapshot.empty) {
                         liveApps = [];
@@ -1339,6 +1343,9 @@
                     }
                     renderStoreApps();
                     renderAdminList();
+
+                    // Check URL parameter after apps load
+                    checkAndOpenDirectApp();
 
                     if (currentlyOpenedAppId) {
                         openAppDetails(currentlyOpenedAppId, false);
@@ -1362,9 +1369,9 @@
             renderCategoryUI();
             renderStoreApps();
             renderAdminList();
+            checkAndOpenDirectApp();
         }
 
-        // Render Categories
         function renderCategoryUI() {
             const container = document.getElementById("categoriesContainer");
             if (container) {
@@ -1395,7 +1402,6 @@
             }
         }
 
-        // Add Category
         window.addNewCategory = async function() {
             const input = document.getElementById("newCategoryInput");
             const val = input.value.trim();
@@ -1422,7 +1428,6 @@
             }
         };
 
-        // Remove Category
         window.removeCategory = async function(catToRemove) {
             if (confirm(`Are you sure you want to remove the category "${catToRemove}"?`)) {
                 const updated = liveCategories.filter(c => c !== catToRemove);
@@ -1439,7 +1444,6 @@
             }
         };
 
-        // Render Apps
         function renderStoreApps() {
             const appsGrid = document.getElementById("appsGrid");
             if (!appsGrid) return;
@@ -1511,7 +1515,6 @@
             });
         }
 
-        // Open Details Modal
         window.openAppDetails = function(appId, updateHistory = true) {
             const app = liveApps.find(a => a.id === appId);
             if (!app) return;
@@ -1538,14 +1541,15 @@
             document.getElementById("appDetailsModal").classList.add("active");
 
             if (updateHistory) {
-                history.replaceState(null, null, `?app=${app.id}`);
+                const newUrl = `${window.location.origin}${window.location.pathname}?app=${app.id}`;
+                history.replaceState(null, null, newUrl);
             }
         };
 
         window.closeDetailsModal = function() {
             document.getElementById("appDetailsModal").classList.remove("active");
             currentlyOpenedAppId = null;
-            history.replaceState(null, null, window.location.pathname);
+            history.replaceState(null, null, `${window.location.origin}${window.location.pathname}`);
         };
 
         function renderModalReviewsList(app) {
@@ -1568,7 +1572,6 @@
             `).join("");
         }
 
-        // Star Rating Selector
         const stars = document.querySelectorAll("#starRatingSelector .star-item");
         stars.forEach(star => {
             star.addEventListener("click", () => {
@@ -1584,7 +1587,6 @@
             });
         });
 
-        // Submit User Review
         window.submitUserReview = async function() {
             if (!currentlyOpenedAppId) return;
 
@@ -1623,27 +1625,28 @@
             showToast("⭐ Thank you! Your review has been posted.");
         };
 
-        // Share App
+        // FIXED: Share only PURE URL so Google Search is never triggered
         window.shareSpecificApp = function(appId, event) {
             if (event) event.stopPropagation();
 
             const app = liveApps.find(a => a.id === appId);
             if (!app) return;
 
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set("app", app.id);
-            const shareUrl = currentUrl.toString();
+            // Generate clean URL
+            const pureShareUrl = `${window.location.origin}${window.location.pathname}?app=${app.id}`;
 
             if (navigator.share) {
                 navigator.share({
-                    title: `${app.name} APK Download | AK STAR STORE`,
-                    text: `Download ${app.name} (v${app.version}, ${app.size}) directly from AK STAR STORE:`,
-                    url: shareUrl
+                    title: `${app.name} APK Download`,
+                    text: `Download ${app.name} directly from AK STAR STORE:`,
+                    url: pureShareUrl
+                }).then(() => {
+                    copyOnlyUrlToClipboard(pureShareUrl, app.name);
                 }).catch(() => {
-                    copyToClipboard(shareUrl, app.name);
+                    copyOnlyUrlToClipboard(pureShareUrl, app.name);
                 });
             } else {
-                copyToClipboard(shareUrl, app.name);
+                copyOnlyUrlToClipboard(pureShareUrl, app.name);
             }
         };
 
@@ -1653,15 +1656,14 @@
             }
         };
 
-        function copyToClipboard(url, appName) {
+        function copyOnlyUrlToClipboard(url, appName) {
             navigator.clipboard.writeText(url).then(() => {
-                showToast(`🔗 Link for ${appName} copied to clipboard!`);
+                showToast(`🔗 Link for ${appName} copied!`);
             }).catch(() => {
                 prompt("Copy this link to share:", url);
             });
         }
 
-        // Admin Management List
         function renderAdminList() {
             const adminAppList = document.getElementById("adminAppList");
             if (!adminAppList) return;
@@ -1900,15 +1902,6 @@
 
             // Start Realtime Database Listening
             initRealtimeListeners();
-
-            // Detect direct shared link query (?app=appId)
-            const urlParams = new URLSearchParams(window.location.search);
-            const directAppId = urlParams.get("app");
-            if (directAppId) {
-                setTimeout(() => {
-                    openAppDetails(directAppId);
-                }, 400);
-            }
         });
     </script>
 </body>
