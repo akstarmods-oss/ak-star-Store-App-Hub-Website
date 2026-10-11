@@ -45,7 +45,7 @@
         body.theme-emerald {
             --bg-dark: #040d0a;
             --card-bg: rgba(10, 29, 21, 0.82);
-            --border-color: rgba(16, 185, 129, 0.16);
+            --border-color: rgba(168, 85, 247, 0.16);
             --accent: #10b981;
             --accent-glow: rgba(16, 185, 129, 0.4);
             --btn-grad-start: #059669;
@@ -160,7 +160,7 @@
             gap: 16px;
         }
 
-        /* 3D Animated Official Site Logo */
+        /* 3D Animated Official Site Logo Container */
         .logo-wrap {
             display: flex;
             align-items: center;
@@ -171,15 +171,16 @@
         }
 
         .logo-img-box {
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             overflow: hidden;
-            display: grid;
-            place-items: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             perspective: 800px;
             box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
-            border: 1.5px solid rgba(251, 191, 36, 0.4);
+            border: 1.5px solid rgba(251, 191, 36, 0.5);
             flex-shrink: 0;
             background: #000;
         }
@@ -891,7 +892,7 @@
             <!-- 3D Official Animated Website Logo (Live Dynamic URL) -->
             <div class="logo-wrap" onclick="window.location.href='index.html'">
                 <div class="logo-img-box logo-anim-pulse" id="siteLogoBox">
-                    <img src="" id="siteLogoImg" alt="AK MOD STORE" referrerpolicy="no-referrer" onerror="this.onerror=null; this.parentElement.innerText='⚡';">
+                    <img src="https://i.ibb.co/8L809HJQ/Whats-App-Image-2026-10-11-at-1-26-28-PM.jpg" id="siteLogoImg" alt="AK MOD STORE">
                 </div>
                 <div class="logo-text">AK STAR <span>STORE</span></div>
             </div>
@@ -1175,8 +1176,8 @@
                 </label>
                 <div class="form-row">
                     <div class="input-group">
-                        <label>Site Logo Image URL (Paste direct ImgBB / PNG Link)</label>
-                        <input type="url" id="adminSiteLogoUrlInput" placeholder="https://i.ibb.co/.../logo.png">
+                        <label>Site Logo Image URL (Paste direct ImgBB / PNG / JPG Link)</label>
+                        <input type="url" id="adminSiteLogoUrlInput" placeholder="https://i.ibb.co/.../logo.jpg">
                     </div>
                 </div>
                 <div class="form-row">
@@ -1344,7 +1345,7 @@
         let currentStoreLogoStyle = "type-default";
         let currentSiteLogoAnim = "logo-anim-pulse";
         let currentAboutFx = "about-fx-floating";
-        let currentSiteLogoUrl = "";
+        let currentSiteLogoUrl = "https://i.ibb.co/8L809HJQ/Whats-App-Image-2026-10-11-at-1-26-28-PM.jpg";
 
         // 3D Animated Trigger Badges
         const logoDefinitions = {
@@ -1378,17 +1379,16 @@
             if (select) select.value = styleKey || "type-default";
         }
 
+        // Fixed Robust Universal Image Loader (PNG, JPG, WebP, etc.)
         function setSiteLogoSource(url) {
-            const img = document.getElementById("siteLogoImg");
             const box = document.getElementById("siteLogoBox");
-            if (!img || !box) return;
+            if (!box) return;
 
-            if (url && (url.startsWith("http://") || url.startsWith("https://"))) {
-                img.src = url;
-                img.style.display = "block";
-            } else {
-                box.innerText = "⚡";
-            }
+            const targetUrl = (url && url.trim().length > 4) 
+                ? url.trim() 
+                : "https://i.ibb.co/8L809HJQ/Whats-App-Image-2026-10-11-at-1-26-28-PM.jpg";
+
+            box.innerHTML = `<img src="${targetUrl}" alt="AK MOD STORE" style="width:100%;height:100%;object-fit:cover;display:block;">`;
         }
 
         window.updateStoreLogoStyle = async function(styleKey) {
@@ -1656,7 +1656,7 @@
                 const grad = ctx.createLinearGradient(0, 0, width, height);
                 const shift = Math.sin(tick * 0.01) * 40;
                 grad.addColorStop(0, `hsla(${240 + shift}, 70%, 50%, 0.08)`);
-                grad.addColorStop(0.5, `hsla(${180 + shift}, 70%, 50%, 0.06)`);
+                grad.addColorStop(1, `hsla(${180 + shift}, 70%, 50%, 0.06)`);
                 grad.addColorStop(1, `hsla(${280 + shift}, 70%, 50%, 0.08)`);
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, width, height);
@@ -1779,6 +1779,8 @@
                         setSiteLogoSource(currentSiteLogoUrl);
                         const inp = document.getElementById("adminSiteLogoUrlInput");
                         if (inp) inp.value = currentSiteLogoUrl;
+                    } else {
+                        setSiteLogoSource(currentSiteLogoUrl);
                     }
                 }, (err) => console.error(err));
 
@@ -1857,8 +1859,8 @@
             const savedLogo = localStorage.getItem("ak_store_logo_style") || "type-default";
             renderAdminTriggerLogo(savedLogo);
 
-            const savedSiteLogo = localStorage.getItem("ak_store_site_logo");
-            if (savedSiteLogo) setSiteLogoSource(savedSiteLogo);
+            const savedSiteLogo = localStorage.getItem("ak_store_site_logo") || currentSiteLogoUrl;
+            setSiteLogoSource(savedSiteLogo);
 
             renderCategoryUI();
             renderStoreApps();
