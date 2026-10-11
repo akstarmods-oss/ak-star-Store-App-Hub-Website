@@ -155,12 +155,12 @@
             margin: 0 auto;
             padding: 14px 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             gap: 16px;
         }
 
-        /* 3D Animated Official Site Logo Container */
+        /* 3D Animated Official Site Logo */
         .logo-wrap {
             display: flex;
             align-items: center;
@@ -224,9 +224,11 @@
             transition: color 0.3s ease;
         }
 
+        /* Desktop Search Bar (Row Layout by default) */
         .search-bar {
             flex: 1;
-            max-width: 420px;
+            max-width: 440px;
+            margin: 0 16px;
         }
 
         .search-bar input {
@@ -742,9 +744,7 @@
         .btn-edit { background: rgba(59, 130, 246, 0.15); border: 1px solid var(--edit); color: #60a5fa; padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
         .btn-delete { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: var(--danger); padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
 
-        /* ====================================================
-           🌐 ABOUT SECTION & CHANNELS HUB (FOOTER)
-           ==================================================== */
+        /* Footer Hub */
         .footer-hub {
             border-top: 1px solid var(--border-color);
             background: rgba(10, 11, 16, 0.92);
@@ -811,7 +811,6 @@
             box-shadow: 0 8px 24px rgba(0, 136, 204, 0.35);
         }
 
-        /* Official WhatsApp Button Style */
         .channel-btn-3d.wa-btn {
             background: linear-gradient(135deg, #25D366, #128C7E);
             box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
@@ -851,24 +850,40 @@
             .playstore-badges-row { grid-template-columns: 1fr 1fr; }
         }
 
-        @media (max-width: 640px) {
+        /* STRICT MOBILE BREAKPOINT (Logo + Admin Icon top row, Search Full Width second row) */
+        @media (max-width: 768px) {
             .nav-container {
-                flex-wrap: wrap;
-                gap: 12px;
-                padding: 12px 16px;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                gap: 12px 0 !important;
+                padding: 12px 16px !important;
             }
 
-            .logo-wrap { order: 1; }
-            .admin-trigger-wrapper { order: 2; margin-left: auto; }
+            .logo-wrap {
+                order: 1 !important;
+                flex: 0 0 auto !important;
+            }
+
+            .admin-trigger-wrapper {
+                order: 2 !important;
+                flex: 0 0 auto !important;
+                margin-left: auto !important;
+            }
 
             .search-bar {
-                order: 3;
+                order: 3 !important;
+                flex: 0 0 100% !important;
                 width: 100% !important;
                 max-width: 100% !important;
-                margin-top: 4px;
+                margin: 6px 0 0 0 !important;
             }
 
-            .search-bar input { width: 100% !important; }
+            .search-bar input {
+                width: 100% !important;
+            }
+
             .apps-grid { grid-template-columns: 1fr; }
             .form-row { flex-direction: column; gap: 0; }
             .details-hero { flex-direction: column; text-align: center; }
@@ -889,7 +904,7 @@
     <!-- Header Navigation -->
     <header class="navbar">
         <div class="nav-container">
-            <!-- 3D Official Animated Website Logo (Live Dynamic URL) -->
+            <!-- 3D Official Animated Website Logo -->
             <div class="logo-wrap" onclick="window.location.href='index.html'">
                 <div class="logo-img-box logo-anim-pulse" id="siteLogoBox">
                     <img src="https://i.ibb.co/8L809HJQ/Whats-App-Image-2026-10-11-at-1-26-28-PM.jpg" id="siteLogoImg" alt="AK MOD STORE">
@@ -897,7 +912,7 @@
                 <div class="logo-text">AK STAR <span>STORE</span></div>
             </div>
 
-            <!-- Responsive Search Bar (Desktop Center / Mobile Below Title) -->
+            <!-- Responsive Search Bar -->
             <div class="search-bar">
                 <input type="text" placeholder="Search apps, tools, games..." id="searchInput">
             </div>
@@ -1379,7 +1394,6 @@
             if (select) select.value = styleKey || "type-default";
         }
 
-        // Fixed Robust Universal Image Loader (PNG, JPG, WebP, etc.)
         function setSiteLogoSource(url) {
             const box = document.getElementById("siteLogoBox");
             if (!box) return;
@@ -1587,7 +1601,7 @@
 
                     const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
                     grad.addColorStop(0, `hsla(${p.hue}, 80%, 60%, 0.14)`);
-                    grad.addColorStop(1, `hsla(${p.hue}, 80%, 60%, 0)`);
+                    grad.addColorStop(1, `hsla(${p.hue}, 80%, 60%, 0.14)`);
                     ctx.fillStyle = grad;
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
@@ -1656,7 +1670,7 @@
                 const grad = ctx.createLinearGradient(0, 0, width, height);
                 const shift = Math.sin(tick * 0.01) * 40;
                 grad.addColorStop(0, `hsla(${240 + shift}, 70%, 50%, 0.08)`);
-                grad.addColorStop(1, `hsla(${180 + shift}, 70%, 50%, 0.06)`);
+                grad.addColorStop(0.5, `hsla(${180 + shift}, 70%, 50%, 0.06)`);
                 grad.addColorStop(1, `hsla(${280 + shift}, 70%, 50%, 0.08)`);
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, width, height);
@@ -1736,7 +1750,6 @@
 
         function initRealtimeListeners() {
             if (db) {
-                // 1. Appearance Listeners
                 db.collection("store_meta").doc("appearance").onSnapshot((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
@@ -1772,7 +1785,6 @@
                     }
                 }, (err) => console.error(err));
 
-                // 2. Custom Logo Branding Listener
                 db.collection("store_meta").doc("branding").onSnapshot((doc) => {
                     if (doc.exists && doc.data().siteLogoUrl) {
                         currentSiteLogoUrl = doc.data().siteLogoUrl;
@@ -1784,7 +1796,6 @@
                     }
                 }, (err) => console.error(err));
 
-                // 3. Channels Listener (Telegram & WhatsApp)
                 db.collection("store_meta").doc("channels").onSnapshot((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
@@ -1801,7 +1812,6 @@
                     }
                 }, (err) => console.error(err));
 
-                // 4. Categories Listener
                 db.collection("store_meta").doc("categories").onSnapshot((doc) => {
                     if (doc.exists && doc.data().list) {
                         liveCategories = doc.data().list;
@@ -1813,7 +1823,6 @@
                     renderStoreApps();
                 }, (err) => console.error(err));
 
-                // 5. Apps Listener
                 db.collection("apps").onSnapshot((snapshot) => {
                     if (!snapshot.empty) {
                         liveApps = [];
