@@ -45,7 +45,7 @@
         body.theme-emerald {
             --bg-dark: #040d0a;
             --card-bg: rgba(10, 29, 21, 0.82);
-            --border-color: rgba(168, 85, 247, 0.16);
+            --border-color: rgba(16, 185, 129, 0.16);
             --accent: #10b981;
             --accent-glow: rgba(16, 185, 129, 0.4);
             --btn-grad-start: #059669;
@@ -146,7 +146,7 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Navbar Layout */
+        /* Navbar */
         .navbar {
             position: sticky;
             top: 0;
@@ -172,7 +172,6 @@
             position: relative;
         }
 
-        /* 3D Animated Official Site Logo */
         .logo-wrap {
             display: flex;
             align-items: center;
@@ -235,7 +234,7 @@
             transition: color 0.3s ease;
         }
 
-        /* PLAY STORE STYLE SEARCH BAR WITH BACK & CLEAR BUTTONS */
+        /* PLAY STORE SEARCH ENGINE */
         .search-bar {
             flex: 1;
             max-width: 460px;
@@ -305,7 +304,6 @@
             font-weight: 800;
         }
 
-        /* REAL-TIME PLAY STORE SEARCH SUGGESTIONS PANEL */
         .search-suggestions-panel {
             position: absolute;
             top: calc(100% + 8px);
@@ -510,7 +508,7 @@
             font-weight: 600;
         }
 
-        /* COMING SOON BUTTON STYLES */
+        /* COMING SOON BUTTON */
         .btn-coming-soon {
             flex: 1;
             display: flex;
@@ -542,7 +540,7 @@
             color: #818cf8 !important;
         }
 
-        /* PLAY STORE STYLE SECTIONS & HORIZONTAL CAROUSEL ARCHITECTURE */
+        /* PLAY STORE CAROUSEL & SECTIONS */
         .store-sections-wrapper {
             display: flex;
             flex-direction: column;
@@ -639,7 +637,6 @@
             width: 100%;
         }
 
-        /* Main Layout */
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -661,7 +658,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Auto-Hide Hero Banner During Active Search */
         body.searching-mode .hero-banner {
             display: none !important;
         }
@@ -881,7 +877,7 @@
         }
         .btn-share:hover { background: var(--accent-glow); border-color: var(--accent); color: #fff; transform: scale(1.05); }
 
-        /* MODAL SYSTEM (CENTERED FIX) */
+        /* CENTERED MODAL */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -986,7 +982,7 @@
         .details-actions-bar { display: flex; gap: 10px; margin-bottom: 20px; width: 100%; }
 
         .reviews-section { margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px; width: 100%; }
-        .reviews-section h3 { font-size: 1.05rem; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+        .reviews-section h3 { font-size: 1.05rem; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; gap: 6px; }
 
         .write-review-box { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; margin-bottom: 18px; width: 100%; }
         .star-rating-select { display: flex; gap: 6px; margin: 8px 0 12px; cursor: pointer; }
@@ -1190,7 +1186,7 @@
             width: 100%;
         }
 
-        /* MULTI-DEVICE RESPONSIVENESS */
+        /* MEDIA QUERIES */
         @media (max-width: 820px) {
             .dashboard-grid, .about-grid { grid-template-columns: 1fr; }
             .playstore-badges-row { grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -1324,7 +1320,7 @@
                 <div class="logo-text">AK STAR <span>STORE</span></div>
             </div>
 
-            <!-- Play Store Style Real-Time Search Bar -->
+            <!-- Play Store Real-Time Search Bar -->
             <div class="search-bar" id="searchBarWrapper">
                 <div class="search-input-box">
                     <button class="search-btn-back" id="searchBackBtn" onclick="exitSearchMode()" title="Back">
@@ -1336,7 +1332,7 @@
                     <input type="text" placeholder="Search apps, tools, games..." id="searchInput" autocomplete="off">
                     <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearchInput()" title="Clear">✕</button>
                 </div>
-                <!-- Real-Time Auto-Suggestions Dropdown (Only Real Apps) -->
+                <!-- Real Suggestions List (Only Real Database Apps) -->
                 <div class="search-suggestions-panel" id="searchSuggestionsPanel"></div>
             </div>
             
@@ -1362,17 +1358,13 @@
         </section>
 
         <!-- Dynamic Category Filters Container -->
-        <div class="categories" id="categoriesContainer">
-            <!-- Populated via Firebase Realtime Listener -->
-        </div>
+        <div class="categories" id="categoriesContainer"></div>
 
         <!-- Dynamic Store Content Container -->
-        <div id="storeContentContainer">
-            <!-- Rendered automatically from Real Database -->
-        </div>
+        <div id="storeContentContainer"></div>
     </main>
 
-    <!-- Footer: About Page & Channels Hub (WhatsApp + Telegram) -->
+    <!-- Footer: About Page & Channels Hub -->
     <footer class="footer-hub">
         <div class="footer-container">
             <div class="about-grid">
@@ -1397,7 +1389,7 @@
         </div>
     </footer>
 
-    <!-- Play Store App Details & Reviews Modal -->
+    <!-- Play Store App Details Modal -->
     <div class="modal-overlay" id="appDetailsModal">
         <div class="modal-card details-card">
             <div class="modal-header">
@@ -1733,7 +1725,13 @@
             console.error("Firebase Init Error:", e);
         }
 
-        // STRICT REAL-DATA ENFORCEMENT: ZERO FAKE / HARDCODED APPS
+        // PURGE OLD DUMMY DATA CACHE TO AVOID DUPLICATES
+        localStorage.removeItem("ak_star_apps");
+        localStorage.removeItem("ak_star_categories");
+        localStorage.removeItem("ak_star_apps_cache");
+        localStorage.removeItem("ak_star_cats_cache");
+
+        // 100% PURE REAL DATA ARRAYS ONLY (NO INITIAL/DUMMY APPS)
         let liveApps = [];
         let liveCategories = [];
         let currentCategory = "All";
@@ -1801,7 +1799,6 @@
             return linked.replace(/\n/g, "<br>");
         }
 
-        // 3D Animated Trigger Badges
         const logoDefinitions = {
             "type-default": `<button class="btn-admin-access type-default"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><span>Admin Portal</span></button>`,
             "type-quantum-cube": `<div class="icon-3d-box type-quantum-cube">🧊</div>`,
@@ -1878,8 +1875,6 @@
             };
             if (db) {
                 await db.collection("store_meta").doc("appearance").set(payload, { merge: true });
-            } else {
-                localStorage.setItem("ak_store_appearance", JSON.stringify(payload));
             }
         }
 
@@ -1898,9 +1893,6 @@
             if (db) {
                 await db.collection("store_meta").doc("branding").set({ siteLogoUrl: logoUrl }, { merge: true });
                 await db.collection("store_meta").doc("channels").set({ telegram: tg, whatsapp: wa }, { merge: true });
-            } else {
-                localStorage.setItem("ak_store_site_logo", logoUrl);
-                localStorage.setItem("ak_store_channels", JSON.stringify({ telegram: tg, whatsapp: wa }));
             }
             showToast("👑 Official Logo & Channels Updated Live!");
         };
@@ -1924,12 +1916,10 @@
                 await db.collection("apps").doc(appId).update({
                     downloads: updatedCount
                 });
-            } else {
-                localStorage.setItem("ak_star_apps", JSON.stringify(liveApps));
             }
         };
 
-        // Canvas Background Engine
+        // Background Particle Canvas
         const canvas = document.getElementById("bgCanvas");
         const ctx = canvas.getContext("2d");
         let animationFrameId = null;
@@ -2211,23 +2201,8 @@
             initAnimationEffect(currentStoreAnimation);
         }
 
-        // ULTRA-FAST REALTIME INITIALIZATION (CACHED INSTANT LOAD)
+        // STRICT REALTIME FIRESTORE LISTENERS (ZERO DUMMY / ZERO LOCAL MERGE)
         function initRealtimeListeners() {
-            // Step 1: Instant Cache Read to eliminate blank loading lag
-            try {
-                const cachedApps = localStorage.getItem("ak_star_apps_cache");
-                const cachedCats = localStorage.getItem("ak_star_cats_cache");
-                if (cachedApps) liveApps = JSON.parse(cachedApps);
-                if (cachedCats) liveCategories = JSON.parse(cachedCats);
-                if (liveApps.length > 0 || liveCategories.length > 0) {
-                    renderCategoryUI();
-                    renderStoreApps();
-                    renderAdminList();
-                }
-            } catch (e) {
-                console.warn("Cache read bypass:", e);
-            }
-
             if (db) {
                 // 1. Appearance Listeners
                 db.collection("store_meta").doc("appearance").onSnapshot((doc) => {
@@ -2273,7 +2248,7 @@
                     }
                 }, (err) => console.error(err));
 
-                // 3. Channels Listener (Telegram & WhatsApp)
+                // 3. Channels Listener
                 db.collection("store_meta").doc("channels").onSnapshot((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
@@ -2290,23 +2265,23 @@
                     }
                 }, (err) => console.error(err));
 
-                // 4. Categories Listener (Pure Real Data)
+                // 4. Categories Listener (DIRECT FROM FIRESTORE ONLY)
                 db.collection("store_meta").doc("categories").onSnapshot((doc) => {
                     if (doc.exists && doc.data().list) {
                         liveCategories = doc.data().list;
-                        localStorage.setItem("ak_star_cats_cache", JSON.stringify(liveCategories));
+                    } else {
+                        liveCategories = [];
                     }
                     renderCategoryUI();
                     renderStoreApps();
                 }, (err) => console.error(err));
 
-                // 5. Apps Listener (Pure Real Data - Zero Hardcoded)
+                // 5. Apps Listener (PURE DATABASE COLLECTION - ZERO DUPLICATES)
                 db.collection("apps").onSnapshot((snapshot) => {
                     liveApps = [];
                     snapshot.forEach((doc) => {
                         liveApps.push({ id: doc.id, ...doc.data() });
                     });
-                    localStorage.setItem("ak_star_apps_cache", JSON.stringify(liveApps));
                     renderStoreApps();
                     renderAdminList();
                     checkAndOpenDirectApp();
@@ -2368,11 +2343,6 @@
 
             if (db) {
                 await db.collection("store_meta").doc("categories").set({ list: updated });
-            } else {
-                liveCategories = updated;
-                localStorage.setItem("ak_star_cats_cache", JSON.stringify(liveCategories));
-                renderCategoryUI();
-                renderStoreApps();
             }
         };
 
@@ -2383,11 +2353,6 @@
 
                 if (db) {
                     await db.collection("store_meta").doc("categories").set({ list: updated });
-                } else {
-                    liveCategories = updated;
-                    localStorage.setItem("ak_star_cats_cache", JSON.stringify(liveCategories));
-                    renderCategoryUI();
-                    renderStoreApps();
                 }
             }
         };
@@ -2490,7 +2455,7 @@
                 return;
             }
 
-            // Play Store Home View with Carousels
+            // Play Store Carousel Section
             const sectionsWrap = document.createElement("div");
             sectionsWrap.className = "store-sections-wrapper";
             let sectionsRendered = 0;
@@ -2561,7 +2526,7 @@
             }
         }
 
-        // PLAY STORE SEARCH ENGINE LOGIC
+        // PLAY STORE SEARCH LOGIC
         const searchInput = document.getElementById("searchInput");
         const searchBarWrapper = document.getElementById("searchBarWrapper");
         const searchSuggestionsPanel = document.getElementById("searchSuggestionsPanel");
@@ -2606,10 +2571,8 @@
             renderStoreApps();
         }
 
-        // STRICT REAL-DATA AUTO SUGGESTIONS
         function showRealPlayStoreSuggestions(query) {
             const q = query.toLowerCase();
-            // Matching only from genuine liveApps in your database
             const matches = liveApps.filter(app => {
                 return (app.name || "").toLowerCase().includes(q) || 
                        (app.category || "").toLowerCase().includes(q);
@@ -2773,11 +2736,6 @@
 
             if (db) {
                 await db.collection("apps").doc(currentlyOpenedAppId).update({ reviews: updatedReviews });
-            } else {
-                app.reviews = updatedReviews;
-                localStorage.setItem("ak_star_apps_cache", JSON.stringify(liveApps));
-                openAppDetails(currentlyOpenedAppId);
-                renderStoreApps();
             }
 
             authorInput.value = "";
@@ -2829,7 +2787,7 @@
             adminAppList.innerHTML = "";
 
             if (liveApps.length === 0) {
-                adminAppList.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">No apps currently uploaded.</p>`;
+                adminAppList.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">No apps currently uploaded in database.</p>`;
                 return;
             }
 
@@ -2890,11 +2848,6 @@
             if (confirm("Are you sure you want to remove this app from the store?")) {
                 if (db) {
                     await db.collection("apps").doc(id).delete();
-                } else {
-                    liveApps = liveApps.filter(item => item.id !== id);
-                    localStorage.setItem("ak_star_apps_cache", JSON.stringify(liveApps));
-                    renderStoreApps();
-                    renderAdminList();
                 }
 
                 if (document.getElementById("editingAppId").value === id) {
@@ -2934,17 +2887,9 @@
 
                 if (db) {
                     await db.collection("apps").doc(editingId).update(appData);
-                } else {
-                    const idx = liveApps.findIndex(a => a.id === editingId);
-                    if (idx !== -1) {
-                        liveApps[idx] = { ...liveApps[idx], ...appData };
-                        localStorage.setItem("ak_star_apps_cache", JSON.stringify(liveApps));
-                        renderStoreApps();
-                        renderAdminList();
-                    }
                 }
                 cancelEditing();
-                alert("App updated successfully!");
+                alert("App updated successfully in Firebase database!");
             } else {
                 const newId = "app-" + Date.now();
                 const newAppData = {
@@ -2965,11 +2910,6 @@
 
                 if (db) {
                     await db.collection("apps").doc(newId).set(newAppData);
-                } else {
-                    liveApps.unshift({ id: newId, ...newAppData });
-                    localStorage.setItem("ak_star_apps_cache", JSON.stringify(liveApps));
-                    renderStoreApps();
-                    renderAdminList();
                 }
 
                 document.getElementById("addAppForm").reset();
