@@ -332,6 +332,50 @@
         @keyframes atomSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes starlightTwinkle { 0% { transform: scale(0.85); } 100% { transform: scale(1.12); } }
 
+        /* REAL-TIME DYNAMIC MINI-CALENDAR EMOJI BADGE */
+        .dyn-cal-badge {
+            display: inline-flex;
+            flex-direction: column;
+            width: 17px;
+            height: 18px;
+            background: #ffffff;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+            user-select: none;
+            vertical-align: middle;
+        }
+
+        .dyn-cal-top {
+            background: linear-gradient(180deg, #ef4444, #dc2626);
+            height: 5px;
+            width: 100%;
+        }
+
+        .dyn-cal-day {
+            color: #0f172a;
+            font-size: 8.5px;
+            font-weight: 800;
+            line-height: 11px;
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .date-meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.25);
+            background: rgba(52, 211, 153, 0.05);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
         /* Main Layout */
         .main-content {
             max-width: 1200px;
@@ -1386,6 +1430,22 @@
             return `${day} ${month} ${year}`;
         }
 
+        function extractDayNumber(dateStr) {
+            if (!dateStr) return new Date().getDate();
+            const match = String(dateStr).match(/\d+/);
+            return match ? match[0] : new Date().getDate();
+        }
+
+        function generateMiniCalHtml(dateStr) {
+            const dayNum = extractDayNumber(dateStr);
+            return `
+                <span class="dyn-cal-badge">
+                    <span class="dyn-cal-top"></span>
+                    <span class="dyn-cal-day">${dayNum}</span>
+                </span>
+            `;
+        }
+
         function formatDownloadCount(num) {
             const n = Number(num) || 0;
             if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M+';
@@ -1497,7 +1557,6 @@
             showToast("👑 Official Logo & Channels Updated Live!");
         };
 
-        // Realtime Download Incrementer
         window.trackAppDownload = async function(appId) {
             if (!appId) return;
             const app = liveApps.find(a => a.id === appId);
@@ -1506,7 +1565,6 @@
             const updatedCount = (Number(app.downloads) || 0) + 1;
             app.downloads = updatedCount;
 
-            // Instantly update on open modal if present
             const modalDownloadsEl = document.getElementById("modalDownloadsVal");
             if (modalDownloadsEl) {
                 modalDownloadsEl.innerText = formatDownloadCount(updatedCount);
@@ -2035,6 +2093,7 @@
                 const reviewCount = app.reviews ? app.reviews.length : 0;
                 const downloadCount = formatDownloadCount(app.downloads || 0);
                 const updateDate = app.updatedDate || "Recently Updated";
+                const miniCalBadge = generateMiniCalHtml(updateDate);
 
                 const card = document.createElement("article");
                 card.className = "app-card";
@@ -2060,7 +2119,7 @@
                         <span class="tag">v${app.version}</span>
                         <span class="tag">${app.category}</span>
                         <span class="tag">${reviewCount} Reviews</span>
-                        <span class="tag" style="color: #34d399; border: 1px solid rgba(52, 211, 153, 0.25);">📅 ${updateDate}</span>
+                        <span class="date-meta-chip">${miniCalBadge} ${updateDate}</span>
                     </div>
                     <p class="app-desc">${app.description}</p>
                     <div class="card-actions" onclick="event.stopPropagation()">
