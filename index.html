@@ -16,10 +16,12 @@
     <style>
         :root {
             --bg-dark: #0a0b10;
-            --card-bg: rgba(20, 22, 34, 0.75);
+            --card-bg: rgba(20, 22, 34, 0.78);
             --border-color: rgba(255, 255, 255, 0.08);
             --accent: #6366f1;
             --accent-glow: rgba(99, 102, 241, 0.35);
+            --btn-grad-start: #4f46e5;
+            --btn-grad-end: #6366f1;
             --danger: #ef4444;
             --danger-glow: rgba(239, 68, 68, 0.3);
             --edit: #3b82f6;
@@ -28,6 +30,47 @@
             --text-primary: #f8fafc;
             --text-muted: #94a3b8;
             --glass-blur: blur(16px);
+        }
+
+        /* Dynamic Theme Classes */
+        body.theme-cyber {
+            --bg-dark: #060511;
+            --card-bg: rgba(22, 14, 46, 0.82);
+            --border-color: rgba(168, 85, 247, 0.16);
+            --accent: #a855f7;
+            --accent-glow: rgba(168, 85, 247, 0.45);
+            --btn-grad-start: #9333ea;
+            --btn-grad-end: #c084fc;
+        }
+
+        body.theme-emerald {
+            --bg-dark: #040d0a;
+            --card-bg: rgba(10, 29, 21, 0.82);
+            --border-color: rgba(16, 185, 129, 0.16);
+            --accent: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.4);
+            --btn-grad-start: #059669;
+            --btn-grad-end: #34d399;
+        }
+
+        body.theme-crimson {
+            --bg-dark: #0f0507;
+            --card-bg: rgba(36, 11, 16, 0.82);
+            --border-color: rgba(239, 68, 68, 0.16);
+            --accent: #ef4444;
+            --accent-glow: rgba(239, 68, 68, 0.45);
+            --btn-grad-start: #dc2626;
+            --btn-grad-end: #f87171;
+        }
+
+        body.theme-cyan {
+            --bg-dark: #030d14;
+            --card-bg: rgba(8, 26, 40, 0.82);
+            --border-color: rgba(6, 182, 212, 0.16);
+            --accent: #06b6d4;
+            --accent-glow: rgba(6, 182, 212, 0.45);
+            --btn-grad-start: #0891b2;
+            --btn-grad-end: #22d3ee;
         }
 
         * {
@@ -49,6 +92,19 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            position: relative;
+            transition: background-color 0.4s ease;
+        }
+
+        /* Background Particle Canvas */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
         }
 
         /* 120Hz Hardware Acceleration */
@@ -87,7 +143,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(10, 11, 16, 0.85);
+            background: rgba(10, 11, 16, 0.88);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid var(--border-color);
@@ -116,6 +172,7 @@
 
         .logo-text span {
             color: var(--accent);
+            transition: color 0.3s ease;
         }
 
         .search-bar input {
@@ -173,6 +230,8 @@
             padding: 40px 20px;
             flex: 1;
             width: 100%;
+            position: relative;
+            z-index: 10;
         }
 
         /* Hero */
@@ -185,9 +244,9 @@
             display: inline-block;
             font-size: 0.75rem;
             font-weight: 700;
-            color: #818cf8;
+            color: var(--accent);
             background: rgba(99, 102, 241, 0.12);
-            border: 1px solid rgba(99, 102, 241, 0.3);
+            border: 1px solid var(--accent-glow);
             padding: 6px 14px;
             border-radius: 99px;
             margin-bottom: 16px;
@@ -259,14 +318,14 @@
             gap: 16px;
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
-            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease;
             cursor: pointer;
         }
 
         .app-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4), 0 0 24px var(--accent-glow);
-            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 24px var(--accent-glow);
+            border-color: var(--accent);
         }
 
         .app-top {
@@ -285,7 +344,7 @@
             font-size: 2rem;
             flex-shrink: 0;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(135deg, #6366f1, #a855f7);
+            background: linear-gradient(135deg, var(--btn-grad-start), var(--btn-grad-end));
             overflow: hidden;
             position: relative;
         }
@@ -372,7 +431,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            background: linear-gradient(135deg, var(--btn-grad-start), var(--btn-grad-end));
             color: #ffffff;
             text-decoration: none;
             padding: 12px;
@@ -380,12 +439,11 @@
             font-weight: 700;
             font-size: 0.92rem;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+            box-shadow: 0 4px 12px var(--accent-glow);
         }
 
         .btn-download:hover {
-            background: linear-gradient(135deg, #4338ca, #4f46e5);
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.55);
+            box-shadow: 0 6px 20px var(--accent-glow);
             transform: scale(1.02);
         }
 
@@ -407,7 +465,7 @@
         }
 
         .btn-share:hover {
-            background: rgba(99, 102, 241, 0.2);
+            background: var(--accent-glow);
             border-color: var(--accent);
             color: #fff;
             transform: scale(1.05);
@@ -447,7 +505,7 @@
         }
 
         .modal-card.dashboard-card {
-            max-width: 980px;
+            max-width: 1000px;
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -498,6 +556,7 @@
             font-size: 2.8rem;
             flex-shrink: 0;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, var(--btn-grad-start), var(--btn-grad-end));
         }
 
         .details-icon img {
@@ -513,7 +572,7 @@
         }
 
         .details-title span {
-            color: #818cf8;
+            color: var(--accent);
             font-size: 0.95rem;
             font-weight: 600;
         }
@@ -686,7 +745,7 @@
 
         .btn-primary {
             width: 100%;
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            background: linear-gradient(135deg, var(--btn-grad-start), var(--btn-grad-end));
             color: #ffffff;
             border: none;
             padding: 13px;
@@ -698,7 +757,6 @@
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #4338ca, #4f46e5);
             box-shadow: 0 6px 18px var(--accent-glow);
         }
 
@@ -735,6 +793,29 @@
             color: #c7d2fe;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 8px;
+        }
+
+        /* Appearance Controls Box in Admin */
+        .appearance-controls-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .appearance-controls-box select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: var(--text-primary);
+            font-size: 0.88rem;
+            outline: none;
         }
 
         .category-management-box {
@@ -784,7 +865,7 @@
 
         .cat-badge {
             background: rgba(99, 102, 241, 0.12);
-            border: 1px solid rgba(99, 102, 241, 0.25);
+            border: 1px solid var(--accent-glow);
             color: #c7d2fe;
             padding: 4px 10px;
             border-radius: 99px;
@@ -899,6 +980,8 @@
             border-top: 1px solid var(--border-color);
             color: var(--text-muted);
             font-size: 0.85rem;
+            position: relative;
+            z-index: 10;
         }
 
         @media (max-width: 820px) {
@@ -907,6 +990,9 @@
             }
             .playstore-badges-row {
                 grid-template-columns: 1fr 1fr;
+            }
+            .appearance-controls-box {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -935,7 +1021,10 @@
         }
     </style>
 </head>
-<body>
+<body class="theme-default">
+
+    <!-- Background 3D/Interactive Particle Canvas -->
+    <canvas id="bgCanvas"></canvas>
 
     <!-- Toast Notification -->
     <div class="toast-alert" id="toastAlert">
@@ -1109,6 +1198,39 @@
                 <button class="close-btn" id="closeDashboardModal" onclick="closeDashboardModalFunc()">&times;</button>
             </div>
 
+            <!-- Appearance & 3D Interactive Animation Controls -->
+            <div class="appearance-controls-box">
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
+                        🎨 Global Store Theme Look
+                    </label>
+                    <select id="adminThemeSelect" onchange="updateStoreTheme(this.value)">
+                        <option value="theme-default">AK Star Dark (Default Original)</option>
+                        <option value="theme-cyber">Cyber Neon Purple (High-Tech)</option>
+                        <option value="theme-emerald">Emerald Matrix Green (Clean)</option>
+                        <option value="theme-crimson">Crimson Bloodline Red (Aggressive)</option>
+                        <option value="theme-cyan">Midnight Electric Cyan (Ultra-Smooth)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
+                        ✨ 3D / Interactive Background FX (10 Types)
+                    </label>
+                    <select id="adminAnimSelect" onchange="updateStoreAnimation(this.value)">
+                        <option value="none">1. Default Minimal (Clean - No FX)</option>
+                        <option value="constellation">2. Constellation Network (Interactive)</option>
+                        <option value="matrix">3. Cyber Matrix Stream (Tech Rain)</option>
+                        <option value="orbs">4. Floating Glowing Orbs (Soft Deep)</option>
+                        <option value="grid">5. Neon 3D Perspective Grid Wave</option>
+                        <option value="starlight">6. Starlight Hyperspace Warp</option>
+                        <option value="snow">7. Digital Snow Embers Drift</option>
+                        <option value="vortex">8. Cosmic Dust Vortex</option>
+                        <option value="aurora">9. Fluid Aurora Wave Glow</option>
+                        <option value="sparkles">10. Quantum Twinkling Stars</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- Category Manager Section -->
             <div class="category-management-box">
                 <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
@@ -1190,7 +1312,7 @@
         </div>
     </div>
 
-    <!-- JavaScript & Realtime Database Logic -->
+    <!-- JavaScript & Realtime Engine -->
     <script>
         const SECRET_ADMIN_KEY = "Ak732888";
 
@@ -1273,7 +1395,256 @@
         let currentlyOpenedAppId = null;
         let selectedReviewRating = 5;
         let hasCheckedDirectAppParam = false;
+        let currentStoreTheme = "theme-default";
+        let currentStoreAnimation = "none";
 
+        // ====================================================
+        // 🌟 10 HIGH-PERFORMANCE INTERACTIVE CANVAS ANIMATIONS
+        // ====================================================
+        const canvas = document.getElementById("bgCanvas");
+        const ctx = canvas.getContext("2d");
+        let animationFrameId = null;
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        let mouse = { x: width / 2, y: height / 2, active: false };
+
+        window.addEventListener("resize", () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        window.addEventListener("mousemove", (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouse.active = true;
+        });
+
+        window.addEventListener("touchmove", (e) => {
+            if (e.touches.length > 0) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+                mouse.active = true;
+            }
+        });
+
+        // Effect State Storage
+        let particles = [];
+        let matrixColumns = [];
+
+        function initAnimationEffect(type) {
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            ctx.clearRect(0, 0, width, height);
+            particles = [];
+
+            if (type === "none") return;
+
+            if (type === "constellation") {
+                const count = Math.min(Math.floor(width / 16), 75);
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        vx: (Math.random() - 0.5) * 0.9,
+                        vy: (Math.random() - 0.5) * 0.9,
+                        radius: Math.random() * 2 + 1
+                    });
+                }
+            } else if (type === "matrix") {
+                const colCount = Math.floor(width / 24);
+                matrixColumns = Array(colCount).fill(0);
+            } else if (type === "orbs") {
+                for (let i = 0; i < 18; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        radius: Math.random() * 90 + 40,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        hue: Math.random() * 60 + 220
+                    });
+                }
+            } else if (type === "starlight") {
+                for (let i = 0; i < 120; i++) {
+                    particles.push({
+                        x: (Math.random() - 0.5) * width,
+                        y: (Math.random() - 0.5) * height,
+                        z: Math.random() * width
+                    });
+                }
+            } else if (type === "snow" || type === "sparkles") {
+                for (let i = 0; i < 70; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        vy: Math.random() * 0.8 + 0.3,
+                        vx: (Math.random() - 0.5) * 0.4,
+                        size: Math.random() * 2.5 + 1,
+                        alpha: Math.random()
+                    });
+                }
+            } else if (type === "vortex") {
+                for (let i = 0; i < 110; i++) {
+                    particles.push({
+                        angle: Math.random() * Math.PI * 2,
+                        distance: Math.random() * (width / 2),
+                        speed: Math.random() * 0.005 + 0.002,
+                        size: Math.random() * 2 + 1
+                    });
+                }
+            }
+
+            loopAnimation(type);
+        }
+
+        let tick = 0;
+        function loopAnimation(type) {
+            tick++;
+            ctx.clearRect(0, 0, width, height);
+
+            if (type === "constellation") {
+                ctx.fillStyle = "rgba(99, 102, 241, 0.6)";
+                for (let i = 0; i < particles.length; i++) {
+                    let p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    for (let j = i + 1; j < particles.length; j++) {
+                        let p2 = particles[j];
+                        let dx = p.x - p2.x;
+                        let dy = p.y - p2.y;
+                        let dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 110) {
+                            ctx.strokeStyle = `rgba(99, 102, 241, ${0.28 * (1 - dist / 110)})`;
+                            ctx.lineWidth = 0.8;
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            } else if (type === "matrix") {
+                ctx.fillStyle = "rgba(10, 11, 16, 0.25)";
+                ctx.fillRect(0, 0, width, height);
+                ctx.fillStyle = "rgba(34, 197, 94, 0.75)";
+                ctx.font = "14px monospace";
+                for (let i = 0; i < matrixColumns.length; i++) {
+                    const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+                    ctx.fillText(char, i * 24, matrixColumns[i] * 24);
+                    if (matrixColumns[i] * 24 > height && Math.random() > 0.975) {
+                        matrixColumns[i] = 0;
+                    }
+                    matrixColumns[i]++;
+                }
+            } else if (type === "orbs") {
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < -p.radius) p.x = width + p.radius;
+                    if (p.x > width + p.radius) p.x = -p.radius;
+                    if (p.y < -p.radius) p.y = height + p.radius;
+                    if (p.y > height + p.radius) p.y = -p.radius;
+
+                    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+                    grad.addColorStop(0, `hsla(${p.hue}, 80%, 60%, 0.14)`);
+                    grad.addColorStop(1, `hsla(${p.hue}, 80%, 60%, 0)`);
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            } else if (type === "grid") {
+                ctx.strokeStyle = "rgba(99, 102, 241, 0.15)";
+                ctx.lineWidth = 1;
+                const horizon = height * 0.55;
+                const step = 40;
+                for (let x = -width; x < width * 2; x += 60) {
+                    ctx.beginPath();
+                    ctx.moveTo(width / 2, horizon);
+                    ctx.lineTo(x, height);
+                    ctx.stroke();
+                }
+                const offset = (tick * 1.5) % step;
+                for (let y = horizon; y < height; y += step) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y + offset);
+                    ctx.lineTo(width, y + offset);
+                    ctx.stroke();
+                }
+            } else if (type === "starlight") {
+                const cx = width / 2;
+                const cy = height / 2;
+                particles.forEach(p => {
+                    p.z -= 4;
+                    if (p.z <= 0) p.z = width;
+                    const k = 220 / p.z;
+                    const px = p.x * k + cx;
+                    const py = p.y * k + cy;
+                    if (px >= 0 && px <= width && py >= 0 && py <= height) {
+                        const size = (1 - p.z / width) * 2.5;
+                        ctx.fillStyle = `rgba(255, 255, 255, ${1 - p.z / width})`;
+                        ctx.beginPath();
+                        ctx.arc(px, py, size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+            } else if (type === "snow") {
+                ctx.fillStyle = "rgba(226, 232, 240, 0.4)";
+                particles.forEach(p => {
+                    p.y += p.vy;
+                    p.x += p.vx;
+                    if (p.y > height) p.y = -5;
+                    if (p.x < 0) p.x = width;
+                    if (p.x > width) p.x = 0;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            } else if (type === "vortex") {
+                const cx = width / 2;
+                const cy = height / 2;
+                particles.forEach(p => {
+                    p.angle += p.speed;
+                    const x = cx + Math.cos(p.angle) * p.distance;
+                    const y = cy + Math.sin(p.angle) * p.distance;
+                    ctx.fillStyle = "rgba(129, 140, 248, 0.45)";
+                    ctx.beginPath();
+                    ctx.arc(x, y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            } else if (type === "aurora") {
+                const grad = ctx.createLinearGradient(0, 0, width, height);
+                const shift = Math.sin(tick * 0.01) * 40;
+                grad.addColorStop(0, `hsla(${240 + shift}, 70%, 50%, 0.08)`);
+                grad.addColorStop(0.5, `hsla(${180 + shift}, 70%, 50%, 0.06)`);
+                grad.addColorStop(1, `hsla(${280 + shift}, 70%, 50%, 0.08)`);
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, width, height);
+            } else if (type === "sparkles") {
+                particles.forEach(p => {
+                    p.alpha += (Math.random() - 0.5) * 0.05;
+                    if (p.alpha < 0.1) p.alpha = 0.1;
+                    if (p.alpha > 0.8) p.alpha = 0.8;
+                    ctx.fillStyle = `rgba(251, 191, 36, ${p.alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+
+            animationFrameId = requestAnimationFrame(() => loopAnimation(type));
+        }
+
+        // ==========================================
+        // UI & FIREBASE SYNC ENGINE
+        // ==========================================
         function showToast(msg) {
             const toast = document.getElementById("toastAlert");
             if (!toast) return;
@@ -1297,7 +1668,6 @@
             return (sum / app.reviews.length).toFixed(1);
         }
 
-        // Check and open app popup automatically from URL parameter
         function checkAndOpenDirectApp() {
             if (hasCheckedDirectAppParam) return;
             const urlParams = new URLSearchParams(window.location.search);
@@ -1311,9 +1681,61 @@
             }
         }
 
+        // Realtime Appearance Sync
+        window.updateStoreTheme = async function(themeClass) {
+            currentStoreTheme = themeClass;
+            applyThemeClass(themeClass);
+            if (db) {
+                await db.collection("store_meta").doc("appearance").set({ theme: themeClass, animation: currentStoreAnimation }, { merge: true });
+            } else {
+                localStorage.setItem("ak_store_theme", themeClass);
+            }
+        };
+
+        window.updateStoreAnimation = async function(animType) {
+            currentStoreAnimation = animType;
+            initAnimationEffect(animType);
+            if (db) {
+                await db.collection("store_meta").doc("appearance").set({ theme: currentStoreTheme, animation: animType }, { merge: true });
+            } else {
+                localStorage.setItem("ak_store_animation", animType);
+            }
+        };
+
+        function applyThemeClass(themeClass) {
+            document.body.className = themeClass || "theme-default";
+            const select = document.getElementById("adminThemeSelect");
+            if (select) select.value = themeClass || "theme-default";
+        }
+
+        function applyAnimationType(animType) {
+            currentStoreAnimation = animType || "none";
+            const select = document.getElementById("adminAnimSelect");
+            if (select) select.value = currentStoreAnimation;
+            initAnimationEffect(currentStoreAnimation);
+        }
+
         // Realtime sync
         function initRealtimeListeners() {
             if (db) {
+                // 1. Appearance Sync (Theme + Particle Effect)
+                db.collection("store_meta").doc("appearance").onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data.theme) {
+                            currentStoreTheme = data.theme;
+                            applyThemeClass(data.theme);
+                        }
+                        if (data.animation) {
+                            applyAnimationType(data.animation);
+                        }
+                    } else {
+                        applyThemeClass("theme-default");
+                        applyAnimationType("none");
+                    }
+                }, (err) => console.error(err));
+
+                // 2. Categories Sync
                 db.collection("store_meta").doc("categories").onSnapshot((doc) => {
                     if (doc.exists && doc.data().list) {
                         liveCategories = doc.data().list;
@@ -1323,11 +1745,9 @@
                     }
                     renderCategoryUI();
                     renderStoreApps();
-                }, (err) => {
-                    console.error("Firestore Category Error:", err);
-                    useLocalStorageFallback();
-                });
+                }, (err) => console.error(err));
 
+                // 3. Apps Realtime Sync
                 db.collection("apps").onSnapshot((snapshot) => {
                     if (!snapshot.empty) {
                         liveApps = [];
@@ -1343,8 +1763,6 @@
                     }
                     renderStoreApps();
                     renderAdminList();
-
-                    // Check URL parameter after apps load
                     checkAndOpenDirectApp();
 
                     if (currentlyOpenedAppId) {
@@ -1365,6 +1783,12 @@
 
             const savedApps = localStorage.getItem("ak_star_apps");
             liveApps = savedApps ? JSON.parse(savedApps) : initialApps;
+
+            const savedTheme = localStorage.getItem("ak_store_theme") || "theme-default";
+            applyThemeClass(savedTheme);
+
+            const savedAnim = localStorage.getItem("ak_store_animation") || "none";
+            applyAnimationType(savedAnim);
 
             renderCategoryUI();
             renderStoreApps();
@@ -1472,7 +1896,7 @@
                 card.setAttribute("onclick", `openAppDetails('${app.id}')`);
                 card.innerHTML = `
                     <div class="app-top">
-                        <div class="app-icon" style="background: ${app.gradient || 'linear-gradient(135deg, #6366f1, #a855f7)'}">
+                        <div class="app-icon" style="background: ${app.gradient || 'linear-gradient(135deg, var(--btn-grad-start), var(--btn-grad-end))'}">
                             ${formatIconHTML(app.icon)}
                         </div>
                         <div class="app-info">
@@ -1527,7 +1951,7 @@
             document.getElementById("modalAppName").innerText = app.name;
             document.getElementById("modalAppDev").innerText = app.developer;
             document.getElementById("modalAppIcon").innerHTML = formatIconHTML(app.icon);
-            document.getElementById("modalAppIcon").style.background = app.gradient || 'linear-gradient(135deg, #6366f1, #a855f7)';
+            document.getElementById("modalAppIcon").style.background = app.gradient || 'linear-gradient(135deg, var(--btn-grad-start), var(--btn-grad-end))';
             document.getElementById("modalRatingVal").innerText = `${avgRating} ★`;
             document.getElementById("modalReviewsCount").innerText = `${reviewCount} Reviews`;
             document.getElementById("modalSizeVal").innerText = app.size;
@@ -1625,14 +2049,13 @@
             showToast("⭐ Thank you! Your review has been posted.");
         };
 
-        // FIXED: Share only PURE URL so Google Search is never triggered
+        // Pure Direct Clickable URL sharing
         window.shareSpecificApp = function(appId, event) {
             if (event) event.stopPropagation();
 
             const app = liveApps.find(a => a.id === appId);
             if (!app) return;
 
-            // Generate clean URL
             const pureShareUrl = `${window.location.origin}${window.location.pathname}?app=${app.id}`;
 
             if (navigator.share) {
@@ -1658,7 +2081,7 @@
 
         function copyOnlyUrlToClipboard(url, appName) {
             navigator.clipboard.writeText(url).then(() => {
-                showToast(`🔗 Link for ${appName} copied!`);
+                showToast(`🔗 Direct URL copied to clipboard!`);
             }).catch(() => {
                 prompt("Copy this link to share:", url);
             });
@@ -1713,7 +2136,7 @@
             document.getElementById("submitAppBtn").innerText = "Update App Details";
             document.getElementById("cancelEditBtn").style.display = "block";
 
-            document.querySelector(".dashboard-card").scrollTo({ top: 120, behavior: "smooth" });
+            document.querySelector(".dashboard-card").scrollTo({ top: 180, behavior: "smooth" });
         };
 
         window.cancelEditing = function() {
@@ -1788,7 +2211,7 @@
                     version: version,
                     size: size,
                     icon: icon,
-                    gradient: "linear-gradient(135deg, #6366f1, #a855f7)",
+                    gradient: "linear-gradient(135deg, var(--btn-grad-start), var(--btn-grad-end))",
                     downloadUrl: downloadUrl,
                     description: desc,
                     rating: 5.0,
@@ -1860,6 +2283,8 @@
                 if (adminDashboardModal) adminDashboardModal.classList.add("active");
                 renderCategoryUI();
                 renderAdminList();
+                document.getElementById("adminThemeSelect").value = currentStoreTheme;
+                document.getElementById("adminAnimSelect").value = currentStoreAnimation;
             } else {
                 if (authErrorMsg) authErrorMsg.style.display = "block";
             }
@@ -1900,7 +2325,7 @@
                 if (e.target === appDetailsModal) closeDetailsModal();
             });
 
-            // Start Realtime Database Listening
+            // Start Realtime Database & Canvas Listening
             initRealtimeListeners();
         });
     </script>
