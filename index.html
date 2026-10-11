@@ -95,7 +95,6 @@
             transition: background-color 0.4s ease;
         }
 
-        /* Dropdown Contrast Fix */
         select, option {
             background-color: #121420 !important;
             color: #f8fafc !important;
@@ -111,7 +110,7 @@
             pointer-events: none;
         }
 
-        .app-card, .btn-download, .btn-share, .chip, .modal-card, .btn-primary, .cat-badge, .about-card {
+        .app-card, .btn-download, .btn-share, .chip, .modal-card, .btn-primary, .cat-badge, .channel-btn-3d {
             will-change: transform, box-shadow;
             transform: translateZ(0);
         }
@@ -785,7 +784,6 @@
             margin-bottom: 16px;
         }
 
-        /* 3D Social & Channel Badges */
         .social-channels-deck {
             display: flex;
             gap: 14px;
@@ -812,17 +810,12 @@
             box-shadow: 0 8px 24px rgba(0, 136, 204, 0.35);
         }
 
-        .channel-btn-3d.yt-btn {
-            background: linear-gradient(135deg, #ff0000, #b91c1c);
-            box-shadow: 0 8px 24px rgba(255, 0, 0, 0.35);
+        /* Official WhatsApp Button Style */
+        .channel-btn-3d.wa-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
         }
 
-        .channel-btn-3d.web-btn {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            box-shadow: 0 8px 24px var(--accent-glow);
-        }
-
-        /* 10 Types of 3D Animations on About/Channel Deck */
         .about-fx-none { transform: none; }
         .about-fx-floating { animation: aboutFloat 3s infinite alternate ease-in-out; }
         .about-fx-pulse { animation: aboutPulse 2s infinite ease-in-out; }
@@ -852,13 +845,11 @@
             padding-top: 20px;
         }
 
-        /* Responsive Breakpoints (Phone vs Desktop) */
         @media (max-width: 820px) {
             .dashboard-grid, .about-grid { grid-template-columns: 1fr; }
             .playstore-badges-row { grid-template-columns: 1fr 1fr; }
         }
 
-        /* Specific Mobile Phone View */
         @media (max-width: 640px) {
             .nav-container {
                 flex-wrap: wrap;
@@ -866,16 +857,9 @@
                 padding: 12px 16px;
             }
 
-            .logo-wrap {
-                order: 1;
-            }
+            .logo-wrap { order: 1; }
+            .admin-trigger-wrapper { order: 2; margin-left: auto; }
 
-            .admin-trigger-wrapper {
-                order: 2;
-                margin-left: auto;
-            }
-
-            /* Search bar fits on next row below Title */
             .search-bar {
                 order: 3;
                 width: 100% !important;
@@ -883,10 +867,7 @@
                 margin-top: 4px;
             }
 
-            .search-bar input {
-                width: 100% !important;
-            }
-
+            .search-bar input { width: 100% !important; }
             .apps-grid { grid-template-columns: 1fr; }
             .form-row { flex-direction: column; gap: 0; }
             .details-hero { flex-direction: column; text-align: center; }
@@ -907,10 +888,10 @@
     <!-- Header Navigation -->
     <header class="navbar">
         <div class="nav-container">
-            <!-- 3D Official Animated Website Logo -->
+            <!-- 3D Official Animated Website Logo (Live Dynamic URL) -->
             <div class="logo-wrap" onclick="window.location.href='index.html'">
                 <div class="logo-img-box logo-anim-pulse" id="siteLogoBox">
-                    <img src="https://i.ibb.co/vz9kC5k/dpmod.png" id="siteLogoImg" alt="AK MOD STORE">
+                    <img src="" id="siteLogoImg" alt="AK MOD STORE" referrerpolicy="no-referrer" onerror="this.onerror=null; this.parentElement.innerText='⚡';">
                 </div>
                 <div class="logo-text">AK STAR <span>STORE</span></div>
             </div>
@@ -920,7 +901,7 @@
                 <input type="text" placeholder="Search apps, tools, games..." id="searchInput">
             </div>
             
-            <!-- Dynamic 3D Animated Admin Portal Trigger [20 Types Controllable] -->
+            <!-- Dynamic 3D Animated Admin Portal Trigger -->
             <div class="admin-trigger-wrapper" id="adminTriggerContainer" onclick="openAuthModal()" title="Admin Control Center">
                 <button class="btn-admin-access type-default">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -952,7 +933,7 @@
         </section>
     </main>
 
-    <!-- Footer: About Page & Channels Hub -->
+    <!-- Footer: About Page & Channels Hub (WhatsApp + Telegram) -->
     <footer class="footer-hub">
         <div class="footer-container">
             <div class="about-grid">
@@ -965,9 +946,10 @@
                         <span style="font-size: 1.2rem;">✈️</span>
                         <span>Official Telegram</span>
                     </a>
-                    <a href="https://youtube.com/" target="_blank" class="channel-btn-3d yt-btn" id="channelLinkYoutube">
-                        <span style="font-size: 1.2rem;">▶️</span>
-                        <span>YouTube Hub</span>
+                    <!-- WhatsApp Official Community Channel -->
+                    <a href="https://wa.me/" target="_blank" class="channel-btn-3d wa-btn" id="channelLinkWhatsapp">
+                        <span style="font-size: 1.2rem;">💬</span>
+                        <span>WhatsApp Channel</span>
                     </a>
                 </div>
             </div>
@@ -1169,7 +1151,7 @@
                 </div>
                 <div>
                     <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
-                        🌐 About/Telegram 3D FX (10 Types)
+                        🌐 Footer Channels 3D FX (10 Types)
                     </label>
                     <select id="adminAboutFxSelect" onchange="updateStoreAboutFx(this.value)">
                         <option value="about-fx-floating">1. 3D Float Momentum</option>
@@ -1186,22 +1168,28 @@
                 </div>
             </div>
 
-            <!-- About Us & Links Manager in Admin -->
+            <!-- Website Logo & Channels URL Manager in Admin -->
             <div class="category-management-box">
                 <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
-                    🔗 Manage Footer Channels & About Content
+                    👑 Website Official Logo & Channels Manager (Live Sync)
                 </label>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Site Logo Image URL (Paste direct ImgBB / PNG Link)</label>
+                        <input type="url" id="adminSiteLogoUrlInput" placeholder="https://i.ibb.co/.../logo.png">
+                    </div>
+                </div>
                 <div class="form-row">
                     <div class="input-group">
                         <label>Telegram Channel URL</label>
                         <input type="url" id="adminTelegramUrlInput" placeholder="https://t.me/yourchannel">
                     </div>
                     <div class="input-group">
-                        <label>YouTube Channel URL</label>
-                        <input type="url" id="adminYoutubeUrlInput" placeholder="https://youtube.com/@yourchannel">
+                        <label>WhatsApp Community / Channel URL</label>
+                        <input type="url" id="adminWhatsappUrlInput" placeholder="https://wa.me/... or https://chat.whatsapp.com/...">
                     </div>
                 </div>
-                <button type="button" class="btn-add-cat" onclick="saveFooterChannelLinks()">Save Footer Links</button>
+                <button type="button" class="btn-add-cat" onclick="saveSiteBrandingAndChannels()">Save Logo & Channels</button>
             </div>
 
             <!-- Category Manager Section -->
@@ -1356,6 +1344,7 @@
         let currentStoreLogoStyle = "type-default";
         let currentSiteLogoAnim = "logo-anim-pulse";
         let currentAboutFx = "about-fx-floating";
+        let currentSiteLogoUrl = "";
 
         // 3D Animated Trigger Badges
         const logoDefinitions = {
@@ -1387,6 +1376,19 @@
             container.innerHTML = logoDefinitions[styleKey] || logoDefinitions["type-default"];
             const select = document.getElementById("adminLogoStyleSelect");
             if (select) select.value = styleKey || "type-default";
+        }
+
+        function setSiteLogoSource(url) {
+            const img = document.getElementById("siteLogoImg");
+            const box = document.getElementById("siteLogoBox");
+            if (!img || !box) return;
+
+            if (url && (url.startsWith("http://") || url.startsWith("https://"))) {
+                img.src = url;
+                img.style.display = "block";
+            } else {
+                box.innerText = "⚡";
+            }
         }
 
         window.updateStoreLogoStyle = async function(styleKey) {
@@ -1428,17 +1430,26 @@
             }
         }
 
-        window.saveFooterChannelLinks = async function() {
+        window.saveSiteBrandingAndChannels = async function() {
+            const logoUrl = document.getElementById("adminSiteLogoUrlInput").value.trim();
             const tg = document.getElementById("adminTelegramUrlInput").value.trim();
-            const yt = document.getElementById("adminYoutubeUrlInput").value.trim();
+            const wa = document.getElementById("adminWhatsappUrlInput").value.trim();
 
+            if (logoUrl) {
+                currentSiteLogoUrl = logoUrl;
+                setSiteLogoSource(logoUrl);
+            }
             if (tg) document.getElementById("channelLinkTelegram").href = tg;
-            if (yt) document.getElementById("channelLinkYoutube").href = yt;
+            if (wa) document.getElementById("channelLinkWhatsapp").href = wa;
 
             if (db) {
-                await db.collection("store_meta").doc("channels").set({ telegram: tg, youtube: yt }, { merge: true });
+                await db.collection("store_meta").doc("branding").set({ siteLogoUrl: logoUrl }, { merge: true });
+                await db.collection("store_meta").doc("channels").set({ telegram: tg, whatsapp: wa }, { merge: true });
+            } else {
+                localStorage.setItem("ak_store_site_logo", logoUrl);
+                localStorage.setItem("ak_store_channels", JSON.stringify({ telegram: tg, whatsapp: wa }));
             }
-            showToast("🔗 Channel Links Updated Live!");
+            showToast("👑 Official Logo & Channels Updated Live!");
         };
 
         // Canvas Background Engine
@@ -1725,6 +1736,7 @@
 
         function initRealtimeListeners() {
             if (db) {
+                // 1. Appearance Listeners
                 db.collection("store_meta").doc("appearance").onSnapshot((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
@@ -1760,14 +1772,34 @@
                     }
                 }, (err) => console.error(err));
 
-                db.collection("store_meta").doc("channels").onSnapshot((doc) => {
-                    if (doc.exists) {
-                        const data = doc.data();
-                        if (data.telegram) document.getElementById("channelLinkTelegram").href = data.telegram;
-                        if (data.youtube) document.getElementById("channelLinkYoutube").href = data.youtube;
+                // 2. Custom Logo Branding Listener
+                db.collection("store_meta").doc("branding").onSnapshot((doc) => {
+                    if (doc.exists && doc.data().siteLogoUrl) {
+                        currentSiteLogoUrl = doc.data().siteLogoUrl;
+                        setSiteLogoSource(currentSiteLogoUrl);
+                        const inp = document.getElementById("adminSiteLogoUrlInput");
+                        if (inp) inp.value = currentSiteLogoUrl;
                     }
                 }, (err) => console.error(err));
 
+                // 3. Channels Listener (Telegram & WhatsApp)
+                db.collection("store_meta").doc("channels").onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data.telegram) {
+                            document.getElementById("channelLinkTelegram").href = data.telegram;
+                            const tgInp = document.getElementById("adminTelegramUrlInput");
+                            if (tgInp) tgInp.value = data.telegram;
+                        }
+                        if (data.whatsapp) {
+                            document.getElementById("channelLinkWhatsapp").href = data.whatsapp;
+                            const waInp = document.getElementById("adminWhatsappUrlInput");
+                            if (waInp) waInp.value = data.whatsapp;
+                        }
+                    }
+                }, (err) => console.error(err));
+
+                // 4. Categories Listener
                 db.collection("store_meta").doc("categories").onSnapshot((doc) => {
                     if (doc.exists && doc.data().list) {
                         liveCategories = doc.data().list;
@@ -1779,6 +1811,7 @@
                     renderStoreApps();
                 }, (err) => console.error(err));
 
+                // 5. Apps Listener
                 db.collection("apps").onSnapshot((snapshot) => {
                     if (!snapshot.empty) {
                         liveApps = [];
@@ -1820,6 +1853,12 @@
 
             const savedAnim = localStorage.getItem("ak_store_animation") || "none";
             applyAnimationType(savedAnim);
+
+            const savedLogo = localStorage.getItem("ak_store_logo_style") || "type-default";
+            renderAdminTriggerLogo(savedLogo);
+
+            const savedSiteLogo = localStorage.getItem("ak_store_site_logo");
+            if (savedSiteLogo) setSiteLogoSource(savedSiteLogo);
 
             renderCategoryUI();
             renderStoreApps();
@@ -2276,7 +2315,9 @@
                     secretKeyInput.value = "";
                     secretKeyInput.focus();
                 }
-                if (authErrorMsg) authErrorMsg.style.display = "none";
+                if (authErrorMsg) {
+                    authErrorMsg.style.display = "none";
+                }
             }
         };
 
@@ -2309,6 +2350,7 @@
                 document.getElementById("adminLogoStyleSelect").value = currentStoreLogoStyle;
                 document.getElementById("adminSiteLogoAnimSelect").value = currentSiteLogoAnim;
                 document.getElementById("adminAboutFxSelect").value = currentAboutFx;
+                if (currentSiteLogoUrl) document.getElementById("adminSiteLogoUrlInput").value = currentSiteLogoUrl;
             } else {
                 if (authErrorMsg) authErrorMsg.style.display = "block";
             }
