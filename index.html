@@ -397,6 +397,18 @@
             transition: all 0.25s ease;
         }
 
+        /* DESCRIPTION CLICKABLE AUTO-LINKS STYLING */
+        .desc-auto-link {
+            color: #38bdf8 !important;
+            text-decoration: underline !important;
+            word-break: break-all !important;
+            font-weight: 600 !important;
+            transition: color 0.2s ease;
+        }
+        .desc-auto-link:hover {
+            color: #818cf8 !important;
+        }
+
         /* Main Layout */
         .main-content {
             max-width: 1200px;
@@ -1091,7 +1103,7 @@
 
             <div>
                 <h4 style="font-size: 0.95rem; margin-bottom: 8px; color: #c7d2fe;">About this app</h4>
-                <p id="modalAppDesc" style="color: var(--text-muted); line-height: 1.6; font-size: 0.92rem;"></p>
+                <div id="modalAppDesc" style="color: var(--text-muted); line-height: 1.6; font-size: 0.92rem; word-break: break-word;"></div>
             </div>
 
             <div class="reviews-section">
@@ -1342,8 +1354,8 @@
                         </div>
 
                         <div class="input-group">
-                            <label>Short Description</label>
-                            <textarea id="appDescInput" rows="2" placeholder="Describe the application features..." required></textarea>
+                            <label>Short Description (Links automatic clickable ban jayenge)</label>
+                            <textarea id="appDescInput" rows="3" placeholder="Describe the application features..." required></textarea>
                         </div>
 
                         <button type="submit" class="btn-primary" id="submitAppBtn">Add App To Store</button>
@@ -1465,6 +1477,31 @@
             if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M+';
             if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K+';
             return n.toString();
+        }
+
+        // Automatic URL Link Converter with HTML Escaping
+        function convertTextToClickableHtml(text) {
+            if (!text) return "";
+            // Step 1: Escape regular html to prevent injection
+            const escaped = text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+            // Step 2: Auto link URLs (http, https, www)
+            const urlPattern = /(https?:\/\/[^\s<]+|www\.[^\s<]+)/gi;
+            const linked = escaped.replace(urlPattern, function(matchedUrl) {
+                let href = matchedUrl;
+                if (!href.match(/^https?:\/\//i)) {
+                    href = 'https://' + href;
+                }
+                return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="desc-auto-link" onclick="event.stopPropagation()">${matchedUrl}</a>`;
+            });
+
+            // Step 3: Preserve linebreaks
+            return linked.replace(/\n/g, "<br>");
         }
 
         // 3D Animated Trigger Badges
@@ -2189,7 +2226,9 @@
             document.getElementById("modalDownloadsVal").innerText = downloadCount;
             document.getElementById("modalSizeVal").innerText = app.size;
             document.getElementById("modalVersionVal").innerText = `v${app.version}`;
-            document.getElementById("modalAppDesc").innerText = app.description;
+            
+            // Injected Clickable HTML links into Description
+            document.getElementById("modalAppDesc").innerHTML = convertTextToClickableHtml(app.description);
             document.getElementById("modalRatingOverview").innerText = `★ ${avgRating} / 5 (${reviewCount} total ratings)`;
 
             // Real-time Action Bar Rendering inside Modal
