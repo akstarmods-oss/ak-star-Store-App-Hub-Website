@@ -95,6 +95,12 @@
             transition: background-color 0.4s ease;
         }
 
+        /* Dropdown Contrast Fix */
+        select, option {
+            background-color: #121420 !important;
+            color: #f8fafc !important;
+        }
+
         #bgCanvas {
             position: fixed;
             top: 0;
@@ -105,7 +111,7 @@
             pointer-events: none;
         }
 
-        .app-card, .btn-download, .btn-share, .chip, .modal-card, .btn-primary, .cat-badge {
+        .app-card, .btn-download, .btn-share, .chip, .modal-card, .btn-primary, .cat-badge, .about-card {
             will-change: transform, box-shadow;
             transform: translateZ(0);
         }
@@ -134,12 +140,12 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Navbar */
+        /* Navbar Layout */
         .navbar {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(10, 11, 16, 0.88);
+            background: rgba(10, 11, 16, 0.92);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid var(--border-color);
@@ -155,18 +161,64 @@
             gap: 16px;
         }
 
-        .logo {
+        /* 3D Animated Official Site Logo */
+        .logo-wrap {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 800;
-            font-size: 1.25rem;
-            letter-spacing: -0.5px;
-            user-select: none;
+            gap: 12px;
             cursor: pointer;
+            user-select: none;
             flex-shrink: 0;
         }
 
+        .logo-img-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            perspective: 800px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+            border: 1.5px solid rgba(251, 191, 36, 0.4);
+            flex-shrink: 0;
+            background: #000;
+        }
+
+        .logo-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 10 Types of 3D Logo Animations */
+        .logo-anim-static { transform: none; }
+        .logo-anim-pulse { animation: logoPulseAnim 2.2s infinite ease-in-out; }
+        .logo-anim-tilt { animation: logoTiltAnim 4s infinite ease-in-out; }
+        .logo-anim-orbit { animation: logoOrbitAnim 3s infinite linear; }
+        .logo-anim-float { animation: logoFloatAnim 2.8s infinite alternate ease-in-out; }
+        .logo-anim-shimmer { animation: logoShimmerAnim 2.4s infinite ease-in-out; }
+        .logo-anim-flip { animation: logoFlipAnim 5s infinite ease-in-out; }
+        .logo-anim-glow { animation: logoGlowAnim 1.8s infinite alternate; }
+        .logo-anim-holo { animation: logoHoloAnim 3.5s infinite ease; }
+        .logo-anim-breathing { animation: logoBreatheAnim 3s infinite ease-in-out; }
+
+        @keyframes logoPulseAnim { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); filter: drop-shadow(0 0 10px #fbbf24); } }
+        @keyframes logoTiltAnim { 0%, 100% { transform: rotateY(0deg); } 50% { transform: rotateY(28deg) rotateX(10deg); } }
+        @keyframes logoOrbitAnim { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes logoFloatAnim { 0% { transform: translateY(0); } 100% { transform: translateY(-5px); } }
+        @keyframes logoShimmerAnim { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.4) drop-shadow(0 0 12px #38bdf8); } }
+        @keyframes logoFlipAnim { 0%, 100% { transform: rotateY(0deg); } 50% { transform: rotateY(180deg); } }
+        @keyframes logoGlowAnim { 0% { box-shadow: 0 0 10px rgba(251, 191, 36, 0.3); } 100% { box-shadow: 0 0 24px rgba(251, 191, 36, 0.85); } }
+        @keyframes logoHoloAnim { 0%, 100% { transform: skewX(0deg); } 50% { transform: skewX(4deg) scale(1.04); } }
+        @keyframes logoBreatheAnim { 0%, 100% { transform: scale(0.96); } 50% { transform: scale(1.05); } }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+        }
         .logo-text span {
             color: var(--accent);
             transition: color 0.3s ease;
@@ -194,9 +246,7 @@
             box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        /* ====================================================
-           🔥 3D ANIMATED LOGO / BADGE TRIGGER ENGINE
-           ==================================================== */
+        /* 3D Trigger Badge Engine */
         .admin-trigger-wrapper {
             position: relative;
             cursor: pointer;
@@ -208,12 +258,8 @@
             z-index: 10;
             transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .admin-trigger-wrapper:hover {
-            transform: scale(1.06);
-        }
-        .admin-trigger-wrapper:active {
-            transform: scale(0.96);
-        }
+        .admin-trigger-wrapper:hover { transform: scale(1.06); }
+        .admin-trigger-wrapper:active { transform: scale(0.96); }
 
         .btn-admin-access {
             background: rgba(255, 255, 255, 0.05);
@@ -227,7 +273,6 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
         .btn-admin-access:hover {
             border-color: var(--accent);
@@ -243,239 +288,50 @@
             place-items: center;
             font-size: 1.45rem;
             position: relative;
-            cursor: pointer;
-            user-select: none;
             box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
 
-        /* 2. Quantum Neon Cube */
-        .type-quantum-cube {
-            background: rgba(99, 102, 241, 0.15);
-            border: 1.5px solid var(--accent);
-            box-shadow: 0 0 20px var(--accent-glow);
-            animation: spinCube3D 5s infinite linear;
-        }
-        @keyframes spinCube3D {
-            0% { transform: rotateY(0deg) rotateX(15deg); }
-            100% { transform: rotateY(360deg) rotateX(15deg); }
-        }
+        .type-quantum-cube { background: rgba(99, 102, 241, 0.15); border: 1.5px solid var(--accent); animation: spinCube3D 5s infinite linear; }
+        .type-cyber-ring { border: 2px dashed #06b6d4; border-radius: 50%; animation: rotateHoloRing 3.5s infinite linear; }
+        .type-floating-diamond { background: linear-gradient(135deg, #a855f7, #6366f1); transform: rotate(45deg); animation: floatDiamond 3s ease-in-out infinite alternate; }
+        .type-orbital-core { border-radius: 50%; background: radial-gradient(circle, #ec4899 0%, #8b5cf6 80%); animation: coreBreathe 2.4s ease-in-out infinite; }
+        .type-pulse-reactor { background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; border-radius: 12px; animation: reactorPulse 1.8s infinite; }
+        .type-vault-lock { background: #1e1b4b; border: 2px solid #6366f1; border-radius: 14px; animation: vaultTwist 4s ease-in-out infinite; }
+        .type-cosmic-portal { border-radius: 50%; background: conic-gradient(from 180deg, #6366f1, #ec4899, #06b6d4, #6366f1); animation: portalSpin 2s linear infinite; }
+        .type-infinity-prism { background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 12px; animation: prismGlow 3s ease-in-out infinite alternate; }
+        .type-laser-hex { clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: linear-gradient(180deg, #3b82f6, #1d4ed8); animation: hexBob 2.5s ease-in-out infinite alternate; }
+        .type-tachyon-bolt { background: rgba(251, 191, 36, 0.15); border: 1px solid #f59e0b; border-radius: 50%; animation: boltFlash 1.6s ease-in-out infinite; }
+        .type-sovereign-crown { background: radial-gradient(circle, #fbbf24 0%, #b45309 90%); border-radius: 12px; animation: crownShine 3s infinite; }
+        .type-dna-helix { border: 2px solid #8b5cf6; border-radius: 50%; animation: dnaWobble 2.4s ease-in-out infinite alternate; }
+        .type-bio-core { border: 2px solid #ef4444; border-radius: 10px; animation: bioPulse 2s ease-in-out infinite; }
+        .type-radar-scanner { border-radius: 50%; border: 1.5px solid #10b981; animation: radarRotate 2s linear infinite; }
+        .type-vortex-3d { border-radius: 50%; background: radial-gradient(circle, #6366f1 10%, #06b6d4 90%); animation: vortexSpin 1.8s linear infinite reverse; }
+        .type-matrix-glyph { background: #022c22; border: 1px solid #10b981; border-radius: 10px; animation: glyphGlow 2s ease infinite alternate; }
+        .type-crystal-pyramid { background: linear-gradient(135deg, #0ea5e9, #a855f7); border-radius: 12px; animation: pyramidTumble 4s ease-in-out infinite; }
+        .type-atomic-reactor { border: 1.5px solid #ec4899; border-radius: 50%; animation: atomSpin 3s linear infinite; }
+        .type-starlight-spark { background: radial-gradient(circle, #ffffff 10%, #6366f1 80%); border-radius: 50%; animation: starlightTwinkle 1.5s ease-in-out infinite alternate; }
 
-        /* 3. Cyber Ring Hologram */
-        .type-cyber-ring {
-            border: 2px dashed #06b6d4;
-            border-radius: 50%;
-            background: rgba(6, 182, 212, 0.12);
-            box-shadow: 0 0 22px rgba(6, 182, 212, 0.5);
-            animation: rotateHoloRing 3.5s infinite linear;
-        }
-        @keyframes rotateHoloRing {
-            0% { transform: rotate(0deg) scale(0.95); }
-            50% { transform: rotate(180deg) scale(1.06); }
-            100% { transform: rotate(360deg) scale(0.95); }
-        }
+        @keyframes spinCube3D { 0% { transform: rotateY(0deg) rotateX(15deg); } 100% { transform: rotateY(360deg) rotateX(15deg); } }
+        @keyframes rotateHoloRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes floatDiamond { 0% { transform: rotate(45deg) translateY(0); } 100% { transform: rotate(45deg) translateY(-5px); } }
+        @keyframes coreBreathe { 0%, 100% { transform: scale(0.92); } 50% { transform: scale(1.08); } }
+        @keyframes reactorPulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        @keyframes vaultTwist { 0%, 100% { transform: rotateY(0deg); } 50% { transform: rotateY(180deg); } }
+        @keyframes portalSpin { 100% { transform: rotate(360deg); } }
+        @keyframes prismGlow { 0% { transform: rotate(-5deg); } 100% { transform: rotate(5deg); } }
+        @keyframes hexBob { 0% { transform: translateY(0); } 100% { transform: translateY(-5px); } }
+        @keyframes boltFlash { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        @keyframes crownShine { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+        @keyframes dnaWobble { 0% { transform: rotateX(0deg); } 100% { transform: rotateX(70deg); } }
+        @keyframes bioPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+        @keyframes radarRotate { 100% { transform: rotate(360deg); } }
+        @keyframes vortexSpin { 100% { transform: rotate(-360deg); } }
+        @keyframes glyphGlow { 0% { box-shadow: 0 0 8px #10b981; } 100% { box-shadow: 0 0 25px #34d399; } }
+        @keyframes pyramidTumble { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(180deg); } }
+        @keyframes atomSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes starlightTwinkle { 0% { transform: scale(0.85); } 100% { transform: scale(1.12); } }
 
-        /* 4. Glowing Floating Diamond */
-        .type-floating-diamond {
-            background: linear-gradient(135deg, #a855f7, #6366f1);
-            transform: rotate(45deg);
-            box-shadow: 0 0 24px rgba(168, 85, 247, 0.6);
-            animation: floatDiamond 3s ease-in-out infinite alternate;
-        }
-        @keyframes floatDiamond {
-            0% { transform: rotate(45deg) translateY(0); }
-            100% { transform: rotate(45deg) translateY(-5px); }
-        }
-
-        /* 5. Orbital Core Sphere */
-        .type-orbital-core {
-            border-radius: 50%;
-            background: radial-gradient(circle, #ec4899 0%, #8b5cf6 80%);
-            box-shadow: 0 0 25px rgba(236, 72, 153, 0.55);
-            animation: coreBreathe 2.4s ease-in-out infinite;
-        }
-        @keyframes coreBreathe {
-            0%, 100% { transform: scale(0.92); filter: drop-shadow(0 0 10px #ec4899); }
-            50% { transform: scale(1.08); filter: drop-shadow(0 0 25px #8b5cf6); }
-        }
-
-        /* 6. Pulse Reactor */
-        .type-pulse-reactor {
-            background: rgba(16, 185, 129, 0.15);
-            border: 2px solid #10b981;
-            border-radius: 12px;
-            animation: reactorPulse 1.8s infinite;
-        }
-        @keyframes reactorPulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
-        /* 7. Cyber Vault Lock */
-        .type-vault-lock {
-            background: #1e1b4b;
-            border: 2px solid #6366f1;
-            border-radius: 14px;
-            animation: vaultTwist 4s ease-in-out infinite;
-        }
-        @keyframes vaultTwist {
-            0%, 100% { transform: rotateY(0deg); }
-            50% { transform: rotateY(180deg); }
-        }
-
-        /* 8. Cosmic Portal */
-        .type-cosmic-portal {
-            border-radius: 50%;
-            background: conic-gradient(from 180deg, #6366f1, #ec4899, #06b6d4, #6366f1);
-            animation: portalSpin 2s linear infinite;
-        }
-        @keyframes portalSpin {
-            100% { transform: rotate(360deg); }
-        }
-
-        /* 9. Infinity Prism */
-        .type-infinity-prism {
-            background: linear-gradient(135deg, #f59e0b, #ef4444);
-            border-radius: 12px;
-            animation: prismGlow 3s ease-in-out infinite alternate;
-        }
-        @keyframes prismGlow {
-            0% { transform: rotate(-5deg) scale(0.95); filter: hue-rotate(0deg); }
-            100% { transform: rotate(5deg) scale(1.05); filter: hue-rotate(90deg); }
-        }
-
-        /* 10. Laser Hex Shield */
-        .type-laser-hex {
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            background: linear-gradient(180deg, #3b82f6, #1d4ed8);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
-            animation: hexBob 2.5s ease-in-out infinite alternate;
-        }
-        @keyframes hexBob {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-5px); }
-        }
-
-        /* 11. Tachyon Lightning */
-        .type-tachyon-bolt {
-            background: rgba(251, 191, 36, 0.15);
-            border: 1px solid #f59e0b;
-            border-radius: 50%;
-            box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
-            animation: boltFlash 1.6s ease-in-out infinite;
-        }
-        @keyframes boltFlash {
-            0%, 100% { filter: brightness(1); transform: scale(1); }
-            50% { filter: brightness(1.6); transform: scale(1.1); }
-        }
-
-        /* 12. Golden Sovereign Crown */
-        .type-sovereign-crown {
-            background: radial-gradient(circle, #fbbf24 0%, #b45309 90%);
-            border-radius: 12px;
-            box-shadow: 0 0 24px rgba(251, 191, 36, 0.55);
-            animation: crownShine 3s infinite;
-        }
-        @keyframes crownShine {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.06) rotate(3deg); }
-        }
-
-        /* 13. DNA Helix */
-        .type-dna-helix {
-            border: 2px solid #8b5cf6;
-            border-radius: 50%;
-            animation: dnaWobble 2.4s ease-in-out infinite alternate;
-            background: rgba(139, 92, 246, 0.15);
-        }
-        @keyframes dnaWobble {
-            0% { transform: rotateX(0deg) rotateZ(0deg); }
-            100% { transform: rotateX(70deg) rotateZ(180deg); }
-        }
-
-        /* 14. Biohazard Cyber Core */
-        .type-bio-core {
-            border: 2px solid #ef4444;
-            border-radius: 10px;
-            background: rgba(239, 68, 68, 0.15);
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
-            animation: bioPulse 2s ease-in-out infinite;
-        }
-        @keyframes bioPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-        }
-
-        /* 15. Radar Scanner Disc */
-        .type-radar-scanner {
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 20%, transparent 70%);
-            border: 1.5px solid #10b981;
-            animation: radarRotate 2s linear infinite;
-        }
-        @keyframes radarRotate {
-            100% { transform: rotate(360deg); }
-        }
-
-        /* 16. Vortex 3D */
-        .type-vortex-3d {
-            border-radius: 50%;
-            background: radial-gradient(circle, #6366f1 10%, #06b6d4 90%);
-            animation: vortexSpin 1.8s linear infinite reverse;
-        }
-        @keyframes vortexSpin {
-            100% { transform: rotate(-360deg); }
-        }
-
-        /* 17. Matrix Glyph */
-        .type-matrix-glyph {
-            background: #022c22;
-            border: 1px solid #10b981;
-            border-radius: 10px;
-            box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
-            animation: glyphGlow 2s ease infinite alternate;
-        }
-        @keyframes glyphGlow {
-            0% { box-shadow: 0 0 8px #10b981; }
-            100% { box-shadow: 0 0 25px #34d399; }
-        }
-
-        /* 18. Crystal Hyper-Pyramid */
-        .type-crystal-pyramid {
-            background: linear-gradient(135deg, #0ea5e9, #a855f7);
-            border-radius: 12px;
-            animation: pyramidTumble 4s ease-in-out infinite;
-        }
-        @keyframes pyramidTumble {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(180deg) scale(0.9); }
-        }
-
-        /* 19. Atomic Reactor */
-        .type-atomic-reactor {
-            border: 1.5px solid #ec4899;
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
-            animation: atomSpin 3s linear infinite;
-        }
-        @keyframes atomSpin {
-            0% { transform: rotate(0deg) skewX(10deg); }
-            100% { transform: rotate(360deg) skewX(10deg); }
-        }
-
-        /* 20. Starlight Spark */
-        .type-starlight-spark {
-            background: radial-gradient(circle, #ffffff 10%, #6366f1 80%);
-            border-radius: 50%;
-            box-shadow: 0 0 26px rgba(255, 255, 255, 0.7);
-            animation: starlightTwinkle 1.5s ease-in-out infinite alternate;
-        }
-        @keyframes starlightTwinkle {
-            0% { transform: scale(0.85); filter: brightness(1); }
-            100% { transform: scale(1.12); filter: brightness(1.7); }
-        }
-
-        /* Layout */
+        /* Main Layout */
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -486,7 +342,6 @@
             z-index: 10;
         }
 
-        /* Hero Banner with Kinetic Running Momentum Animation */
         .hero-banner {
             text-align: center;
             padding: 30px 15px 40px;
@@ -515,16 +370,8 @@
             box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
         }
 
-        @keyframes badgeShimmer {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes badgeFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
-        }
+        @keyframes badgeShimmer { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes badgeFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 
         .animated-hero-title {
             font-size: clamp(2rem, 5vw, 3.4rem);
@@ -541,15 +388,8 @@
             filter: drop-shadow(0 2px 14px rgba(99, 102, 241, 0.25));
         }
 
-        @keyframes titleMomentumWave {
-            0% { background-position: 0% center; }
-            100% { background-position: 250% center; }
-        }
-
-        @keyframes heroPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.015); }
-        }
+        @keyframes titleMomentumWave { 0% { background-position: 0% center; } 100% { background-position: 250% center; } }
+        @keyframes heroPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.015); } }
 
         .animated-hero-desc {
             color: var(--text-muted);
@@ -560,12 +400,8 @@
             animation: descMomentum 4s ease-in-out infinite alternate;
         }
 
-        @keyframes descMomentum {
-            0% { transform: translateY(0); color: #94a3b8; }
-            100% { transform: translateY(3px); color: #cbd5e1; }
-        }
+        @keyframes descMomentum { 0% { transform: translateY(0); color: #94a3b8; } 100% { transform: translateY(3px); color: #cbd5e1; } }
 
-        /* Categories */
         .categories {
             display: flex;
             gap: 10px;
@@ -575,9 +411,7 @@
             scrollbar-width: none;
         }
 
-        .categories::-webkit-scrollbar {
-            display: none;
-        }
+        .categories::-webkit-scrollbar { display: none; }
 
         .chip {
             padding: 8px 18px;
@@ -597,14 +431,12 @@
             color: var(--bg-dark);
         }
 
-        /* Apps Grid */
         .apps-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
         }
 
-        /* App Card */
         .app-card {
             position: relative;
             background: var(--card-bg);
@@ -655,10 +487,7 @@
             display: block;
         }
 
-        .app-info {
-            flex: 1;
-            overflow: hidden;
-        }
+        .app-info { flex: 1; overflow: hidden; }
 
         .app-info h3 {
             font-size: 1.15rem;
@@ -668,11 +497,7 @@
             text-overflow: ellipsis;
         }
 
-        .app-dev {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            display: block;
-        }
+        .app-dev { color: var(--text-muted); font-size: 0.85rem; display: block; }
 
         .app-stats-row {
             display: flex;
@@ -682,20 +507,9 @@
             font-size: 0.8rem;
         }
 
-        .stat-rating {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            color: #fbbf24;
-            font-weight: 700;
-        }
+        .stat-rating { display: flex; align-items: center; gap: 3px; color: #fbbf24; font-weight: 700; }
 
-        .meta-tags {
-            display: flex;
-            gap: 6px;
-            margin-top: 6px;
-            flex-wrap: wrap;
-        }
+        .meta-tags { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
 
         .tag {
             font-size: 0.72rem;
@@ -715,11 +529,7 @@
             overflow: hidden;
         }
 
-        .card-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+        .card-actions { display: flex; gap: 10px; align-items: center; }
 
         .btn-download {
             flex: 1;
@@ -738,14 +548,8 @@
             box-shadow: 0 4px 12px var(--accent-glow);
         }
 
-        .btn-download:hover {
-            box-shadow: 0 6px 20px var(--accent-glow);
-            transform: scale(1.02);
-        }
-
-        .btn-download:active {
-            transform: scale(0.98);
-        }
+        .btn-download:hover { box-shadow: 0 6px 20px var(--accent-glow); transform: scale(1.02); }
+        .btn-download:active { transform: scale(0.98); }
 
         .btn-share {
             background: rgba(255, 255, 255, 0.06);
@@ -759,13 +563,7 @@
             justify-content: center;
             transition: all 0.2s ease;
         }
-
-        .btn-share:hover {
-            background: var(--accent-glow);
-            border-color: var(--accent);
-            color: #fff;
-            transform: scale(1.05);
-        }
+        .btn-share:hover { background: var(--accent-glow); border-color: var(--accent); color: #fff; transform: scale(1.05); }
 
         /* Modals */
         .modal-overlay {
@@ -784,9 +582,7 @@
             padding: 20px;
         }
 
-        .modal-overlay.active {
-            display: flex !important;
-        }
+        .modal-overlay.active { display: flex !important; }
 
         .modal-card {
             background: #121420;
@@ -800,25 +596,10 @@
             z-index: 10000;
         }
 
-        .modal-card.dashboard-card {
-            max-width: 1000px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
+        .modal-card.dashboard-card { max-width: 1000px; max-height: 90vh; overflow-y: auto; }
+        .modal-card.details-card { max-width: 720px; max-height: 90vh; overflow-y: auto; padding: 32px; }
 
-        .modal-card.details-card {
-            max-width: 720px;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 32px;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 
         .close-btn {
             background: none;
@@ -829,17 +610,9 @@
             line-height: 1;
             padding: 4px;
         }
+        .close-btn:hover { color: var(--text-primary); }
 
-        .close-btn:hover {
-            color: var(--text-primary);
-        }
-
-        .details-hero {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            margin-bottom: 24px;
-        }
+        .details-hero { display: flex; gap: 20px; align-items: center; margin-bottom: 24px; }
 
         .details-icon {
             width: 88px;
@@ -854,23 +627,10 @@
             background: linear-gradient(135deg, var(--btn-grad-start), var(--btn-grad-end));
         }
 
-        .details-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .details-icon img { width: 100%; height: 100%; object-fit: cover; }
 
-        .details-title h2 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .details-title span {
-            color: var(--accent);
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
+        .details-title h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+        .details-title span { color: var(--accent); font-size: 0.95rem; font-weight: 600; }
 
         .playstore-badges-row {
             display: grid;
@@ -883,132 +643,31 @@
             text-align: center;
         }
 
-        .badge-col {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            align-items: center;
-        }
+        .badge-col { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+        .badge-col-val { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); display: flex; align-items: center; gap: 4px; }
+        .badge-col-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
 
-        .badge-col-val {
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+        .details-actions-bar { display: flex; gap: 12px; margin-bottom: 24px; }
 
-        .badge-col-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-weight: 600;
-        }
+        .reviews-section { margin-top: 28px; border-top: 1px solid var(--border-color); padding-top: 24px; }
+        .reviews-section h3 { font-size: 1.1rem; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
 
-        .details-actions-bar {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
+        .write-review-box { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; margin-bottom: 20px; }
+        .star-rating-select { display: flex; gap: 6px; margin: 8px 0 12px; cursor: pointer; }
+        .star-item { font-size: 1.5rem; color: #4b5563; }
+        .star-item.selected, .star-item:hover { color: #f59e0b; }
 
-        /* Reviews Section */
-        .reviews-section {
-            margin-top: 28px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 24px;
-        }
-
-        .reviews-section h3 {
-            font-size: 1.1rem;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .write-review-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-
-        .star-rating-select {
-            display: flex;
-            gap: 6px;
-            margin: 8px 0 12px;
-            cursor: pointer;
-        }
-
-        .star-item {
-            font-size: 1.5rem;
-            color: #4b5563;
-            transition: color 0.15s ease;
-        }
-
-        .star-item.selected, .star-item:hover {
-            color: #f59e0b;
-        }
-
-        .reviews-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 280px;
-            overflow-y: auto;
-            padding-right: 6px;
-        }
-
-        .review-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 14px;
-        }
-
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .review-author {
-            font-size: 0.88rem;
-            font-weight: 700;
-        }
-
-        .review-stars {
-            color: #f59e0b;
-            font-size: 0.8rem;
-        }
-
-        .review-comment {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
+        .reviews-list { display: flex; flex-direction: column; gap: 12px; max-height: 280px; overflow-y: auto; }
+        .review-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; }
+        .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .review-author { font-size: 0.88rem; font-weight: 700; }
+        .review-stars { color: #f59e0b; font-size: 0.8rem; }
+        .review-comment { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
 
         /* Form Styles */
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 16px;
-            width: 100%;
-        }
-
-        .input-group label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .input-group input, 
-        .input-group select, 
-        .input-group textarea {
+        .input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; width: 100%; }
+        .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+        .input-group input, .input-group select, .input-group textarea {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             border-radius: 10px;
@@ -1016,26 +675,6 @@
             color: var(--text-primary);
             font-size: 0.9rem;
             outline: none;
-            transition: all 0.2s ease;
-        }
-
-        .input-group select option {
-            background: #121420;
-            color: #fff;
-        }
-
-        .input-group input:focus, 
-        .input-group select:focus, 
-        .input-group textarea:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 12px var(--accent-glow);
-        }
-
-        .error-msg {
-            color: var(--danger);
-            font-size: 0.8rem;
-            display: none;
-            margin-top: 4px;
         }
 
         .btn-primary {
@@ -1048,11 +687,6 @@
             font-weight: 700;
             font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary:hover {
-            box-shadow: 0 6px 18px var(--accent-glow);
         }
 
         .btn-secondary {
@@ -1063,32 +697,13 @@
             padding: 10px;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 0.88rem;
             cursor: pointer;
             margin-top: 8px;
             display: none;
         }
 
-        /* Dashboard Inner Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
-            gap: 24px;
-            margin-top: 15px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 12px;
-        }
-
-        .dashboard-section h3 {
-            font-size: 1rem;
-            margin-bottom: 14px;
-            color: #c7d2fe;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
-        }
+        .dashboard-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; margin-top: 15px; }
+        .form-row { display: flex; gap: 12px; }
 
         .appearance-controls-box {
             background: rgba(255, 255, 255, 0.03);
@@ -1097,19 +712,8 @@
             padding: 16px;
             margin-bottom: 20px;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 14px;
-        }
-
-        .appearance-controls-box select {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px 12px;
-            color: var(--text-primary);
-            font-size: 0.88rem;
-            outline: none;
         }
 
         .category-management-box {
@@ -1119,216 +723,183 @@
             padding: 14px;
             margin-bottom: 20px;
         }
+        .add-category-row { display: flex; gap: 8px; margin-bottom: 12px; }
+        .add-category-row input { flex: 1; border-radius: 8px; padding: 8px 12px; outline: none; }
+        .btn-add-cat { background: var(--accent); color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 
-        .add-category-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
+        .admin-categories-tags { display: flex; flex-wrap: wrap; gap: 8px; max-height: 100px; overflow-y: auto; }
+        .cat-badge { background: rgba(99, 102, 241, 0.12); border: 1px solid var(--accent-glow); color: #c7d2fe; padding: 4px 10px; border-radius: 99px; font-size: 0.75rem; display: flex; align-items: center; gap: 6px; }
+        .cat-del-btn { background: none; border: none; color: #f87171; font-weight: 800; cursor: pointer; }
 
-        .add-category-row input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 8px 12px;
-            color: var(--text-primary);
-            font-size: 0.85rem;
-            outline: none;
-        }
+        .admin-app-list { display: flex; flex-direction: column; gap: 12px; max-height: 480px; overflow-y: auto; }
+        .admin-item-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .admin-item-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+        .admin-item-icon { width: 38px; height: 38px; border-radius: 8px; display: grid; place-items: center; background: rgba(255, 255, 255, 0.05); flex-shrink: 0; overflow: hidden; }
+        .admin-item-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .admin-item-details h4 { font-size: 0.9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .admin-item-details span { font-size: 0.74rem; color: var(--text-muted); }
+        .admin-actions { display: flex; gap: 6px; }
+        .btn-edit { background: rgba(59, 130, 246, 0.15); border: 1px solid var(--edit); color: #60a5fa; padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+        .btn-delete { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: var(--danger); padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
 
-        .btn-add-cat {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.82rem;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .admin-categories-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            max-height: 100px;
-            overflow-y: auto;
-        }
-
-        .cat-badge {
-            background: rgba(99, 102, 241, 0.12);
-            border: 1px solid var(--accent-glow);
-            color: #c7d2fe;
-            padding: 4px 10px;
-            border-radius: 99px;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .cat-del-btn {
-            background: none;
-            border: none;
-            color: #f87171;
-            font-size: 1rem;
-            font-weight: 800;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .admin-app-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 480px;
-            overflow-y: auto;
-            padding-right: 6px;
-        }
-
-        .admin-item-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .admin-item-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            overflow: hidden;
-        }
-
-        .admin-item-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.05);
-            flex-shrink: 0;
-        }
-
-        .admin-item-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .admin-item-details h4 {
-            font-size: 0.9rem;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .admin-item-details span {
-            font-size: 0.74rem;
-            color: var(--text-muted);
-        }
-
-        .admin-actions {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-        }
-
-        .btn-edit {
-            background: rgba(59, 130, 246, 0.15);
-            border: 1px solid var(--edit);
-            color: #60a5fa;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-delete {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        footer {
-            text-align: center;
-            padding: 24px;
+        /* ====================================================
+           🌐 ABOUT SECTION & CHANNELS HUB (FOOTER)
+           ==================================================== */
+        .footer-hub {
             border-top: 1px solid var(--border-color);
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            background: rgba(10, 11, 16, 0.92);
+            padding: 48px 20px 24px;
             position: relative;
             z-index: 10;
         }
 
-        @media (max-width: 820px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            .playstore-badges-row {
-                grid-template-columns: 1fr 1fr;
-            }
-            .appearance-controls-box {
-                grid-template-columns: 1fr;
-            }
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
         }
 
-        @media (max-width: 600px) {
-            .nav-container {
-                flex-direction: row;
-                align-items: center;
-                gap: 10px;
-            }
-            .search-bar {
-                order: 2;
-                width: 100%;
-                max-width: 100%;
-            }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .about-info-box h3 {
+            font-size: 1.45rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .about-info-box p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        /* 3D Social & Channel Badges */
+        .social-channels-deck {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .channel-btn-3d {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 14px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            perspective: 600px;
+            position: relative;
+        }
+
+        .channel-btn-3d.tg-btn {
+            background: linear-gradient(135deg, #0088cc, #00b4d8);
+            box-shadow: 0 8px 24px rgba(0, 136, 204, 0.35);
+        }
+
+        .channel-btn-3d.yt-btn {
+            background: linear-gradient(135deg, #ff0000, #b91c1c);
+            box-shadow: 0 8px 24px rgba(255, 0, 0, 0.35);
+        }
+
+        .channel-btn-3d.web-btn {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        /* 10 Types of 3D Animations on About/Channel Deck */
+        .about-fx-none { transform: none; }
+        .about-fx-floating { animation: aboutFloat 3s infinite alternate ease-in-out; }
+        .about-fx-pulse { animation: aboutPulse 2s infinite ease-in-out; }
+        .about-fx-hologram { animation: aboutHolo 3.2s infinite ease-in-out; }
+        .about-fx-tilt { animation: aboutTilt 4s infinite ease-in-out; }
+        .about-fx-glow { animation: aboutGlow 2.5s infinite alternate; }
+        .about-fx-bounce { animation: aboutBounce 2s infinite ease; }
+        .about-fx-glitch { animation: aboutGlitch 3s infinite; }
+        .about-fx-shimmer { animation: aboutShimmer 3s infinite linear; }
+        .about-fx-3dflip { animation: aboutFlip 4.5s infinite ease-in-out; }
+
+        @keyframes aboutFloat { 0% { transform: translateY(0); } 100% { transform: translateY(-6px); } }
+        @keyframes aboutPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes aboutHolo { 0%, 100% { filter: hue-rotate(0deg); } 50% { filter: hue-rotate(90deg); } }
+        @keyframes aboutTilt { 0%, 100% { transform: rotateY(0); } 50% { transform: rotateY(18deg); } }
+        @keyframes aboutGlow { 0% { box-shadow: 0 4px 14px rgba(0,0,0,0.4); } 100% { box-shadow: 0 10px 30px var(--accent-glow); } }
+        @keyframes aboutBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px) scale(1.03); } }
+        @keyframes aboutGlitch { 0%, 100% { transform: skewX(0); } 50% { transform: skewX(3deg); } }
+        @keyframes aboutShimmer { 0% { filter: brightness(1); } 50% { filter: brightness(1.25); } 100% { filter: brightness(1); } }
+        @keyframes aboutFlip { 0%, 100% { transform: rotateX(0); } 50% { transform: rotateX(15deg); } }
+
+        .footer-copy {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        /* Responsive Breakpoints (Phone vs Desktop) */
+        @media (max-width: 820px) {
+            .dashboard-grid, .about-grid { grid-template-columns: 1fr; }
+            .playstore-badges-row { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* Specific Mobile Phone View */
+        @media (max-width: 640px) {
             .nav-container {
                 flex-wrap: wrap;
+                gap: 12px;
+                padding: 12px 16px;
             }
-            .admin-trigger-wrapper {
+
+            .logo-wrap {
                 order: 1;
+            }
+
+            .admin-trigger-wrapper {
+                order: 2;
                 margin-left: auto;
             }
-            .apps-grid {
-                grid-template-columns: 1fr;
+
+            /* Search bar fits on next row below Title */
+            .search-bar {
+                order: 3;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin-top: 4px;
             }
-            .form-row {
-                flex-direction: column;
-                gap: 0;
+
+            .search-bar input {
+                width: 100% !important;
             }
-            .details-hero {
-                flex-direction: column;
-                text-align: center;
-            }
-            .details-actions-bar {
-                flex-direction: column;
-            }
+
+            .apps-grid { grid-template-columns: 1fr; }
+            .form-row { flex-direction: column; gap: 0; }
+            .details-hero { flex-direction: column; text-align: center; }
+            .details-actions-bar { flex-direction: column; }
         }
     </style>
 </head>
 <body class="theme-default">
 
-    <!-- Background 3D/Interactive Particle Canvas -->
+    <!-- Background Particle Canvas -->
     <canvas id="bgCanvas"></canvas>
 
-    <!-- Toast Notification -->
+    <!-- Toast Alert -->
     <div class="toast-alert" id="toastAlert">
         <span>🔗 Direct URL copied to clipboard!</span>
     </div>
@@ -1336,15 +907,20 @@
     <!-- Header Navigation -->
     <header class="navbar">
         <div class="nav-container">
-            <div class="logo" onclick="window.location.href='index.html'">
-                <span class="logo-icon">⚡</span>
-                <span class="logo-text">AK STAR <span>STORE</span></span>
+            <!-- 3D Official Animated Website Logo -->
+            <div class="logo-wrap" onclick="window.location.href='index.html'">
+                <div class="logo-img-box logo-anim-pulse" id="siteLogoBox">
+                    <img src="https://i.ibb.co/vz9kC5k/dpmod.png" id="siteLogoImg" alt="AK MOD STORE">
+                </div>
+                <div class="logo-text">AK STAR <span>STORE</span></div>
             </div>
+
+            <!-- Responsive Search Bar (Desktop Center / Mobile Below Title) -->
             <div class="search-bar">
                 <input type="text" placeholder="Search apps, tools, games..." id="searchInput">
             </div>
             
-            <!-- Dynamic 3D Animated Admin Portal Trigger [Visible by Default] -->
+            <!-- Dynamic 3D Animated Admin Portal Trigger [20 Types Controllable] -->
             <div class="admin-trigger-wrapper" id="adminTriggerContainer" onclick="openAuthModal()" title="Admin Control Center">
                 <button class="btn-admin-access type-default">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1359,7 +935,6 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Hero Banner with OP Kinetic Running Momentum Animation -->
         <section class="hero-banner">
             <div class="badge animated-hero-badge">⚡ FEATURED RELEASE</div>
             <h1 class="animated-hero-title">Next–Gen Apps Direct to Your Device</h1>
@@ -1377,9 +952,29 @@
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <p>© 2026 AK STAR STORE • Fast & Verified APK Distribution</p>
+    <!-- Footer: About Page & Channels Hub -->
+    <footer class="footer-hub">
+        <div class="footer-container">
+            <div class="about-grid">
+                <div class="about-info-box">
+                    <h3 id="footerAboutTitle">About AK STAR STORE</h3>
+                    <p id="footerAboutDesc">AK STAR STORE is an ultra-fast, verified APK distribution network delivering premium modded tools, production utilities, and high-performance applications with 100% direct downloads.</p>
+                </div>
+                <div class="social-channels-deck about-fx-floating" id="footerChannelsDeck">
+                    <a href="https://t.me/" target="_blank" class="channel-btn-3d tg-btn" id="channelLinkTelegram">
+                        <span style="font-size: 1.2rem;">✈️</span>
+                        <span>Official Telegram</span>
+                    </a>
+                    <a href="https://youtube.com/" target="_blank" class="channel-btn-3d yt-btn" id="channelLinkYoutube">
+                        <span style="font-size: 1.2rem;">▶️</span>
+                        <span>YouTube Hub</span>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-copy">
+                <p>© 2026 AK STAR STORE • Fast & Verified APK Distribution</p>
+            </div>
+        </div>
     </footer>
 
     <!-- Play Store App Details & Reviews Modal -->
@@ -1555,6 +1150,58 @@
                         <option value="type-starlight-spark">20. Starlight Spark Orb</option>
                     </select>
                 </div>
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
+                        ⚡ Site Logo 3D Animation (10 Types)
+                    </label>
+                    <select id="adminSiteLogoAnimSelect" onchange="updateStoreSiteLogoAnim(this.value)">
+                        <option value="logo-anim-pulse">1. Pulse Glow (Default 3D)</option>
+                        <option value="logo-anim-tilt">2. 3D Gyro Tilt</option>
+                        <option value="logo-anim-orbit">3. Continuous Orbit Spin</option>
+                        <option value="logo-anim-float">4. Smooth Floating Breath</option>
+                        <option value="logo-anim-shimmer">5. Metallic Shimmer Flash</option>
+                        <option value="logo-anim-flip">6. 3D Axis Flip</option>
+                        <option value="logo-anim-glow">7. Golden Neon Glow</option>
+                        <option value="logo-anim-holo">8. Holographic Skew</option>
+                        <option value="logo-anim-breathing">9. Cosmic Breathing</option>
+                        <option value="logo-anim-static">10. Static Normal (No Anim)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
+                        🌐 About/Telegram 3D FX (10 Types)
+                    </label>
+                    <select id="adminAboutFxSelect" onchange="updateStoreAboutFx(this.value)">
+                        <option value="about-fx-floating">1. 3D Float Momentum</option>
+                        <option value="about-fx-pulse">2. Quantum Core Pulse</option>
+                        <option value="about-fx-hologram">3. Color Shift Hologram</option>
+                        <option value="about-fx-tilt">4. 3D Perspective Tilt</option>
+                        <option value="about-fx-glow">5. Deep Neon Radiance</option>
+                        <option value="about-fx-bounce">6. Subtle Energy Bounce</option>
+                        <option value="about-fx-glitch">7. Cyber Glitch Skew</option>
+                        <option value="about-fx-shimmer">8. Silver Shimmer Wave</option>
+                        <option value="about-fx-3dflip">9. 3D Isometric Flip</option>
+                        <option value="about-fx-none">10. Minimal Flat Clean</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- About Us & Links Manager in Admin -->
+            <div class="category-management-box">
+                <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
+                    🔗 Manage Footer Channels & About Content
+                </label>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Telegram Channel URL</label>
+                        <input type="url" id="adminTelegramUrlInput" placeholder="https://t.me/yourchannel">
+                    </div>
+                    <div class="input-group">
+                        <label>YouTube Channel URL</label>
+                        <input type="url" id="adminYoutubeUrlInput" placeholder="https://youtube.com/@yourchannel">
+                    </div>
+                </div>
+                <button type="button" class="btn-add-cat" onclick="saveFooterChannelLinks()">Save Footer Links</button>
             </div>
 
             <!-- Category Manager Section -->
@@ -1707,10 +1354,10 @@
         let currentStoreTheme = "theme-default";
         let currentStoreAnimation = "none";
         let currentStoreLogoStyle = "type-default";
+        let currentSiteLogoAnim = "logo-anim-pulse";
+        let currentAboutFx = "about-fx-floating";
 
-        // ====================================================
-        // 🔮 RENDER 20 TYPES OF 3D ANIMATED LOGOS
-        // ====================================================
+        // 3D Animated Trigger Badges
         const logoDefinitions = {
             "type-default": `<button class="btn-admin-access type-default"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><span>Admin Portal</span></button>`,
             "type-quantum-cube": `<div class="icon-3d-box type-quantum-cube">🧊</div>`,
@@ -1745,20 +1392,56 @@
         window.updateStoreLogoStyle = async function(styleKey) {
             currentStoreLogoStyle = styleKey;
             renderAdminTriggerLogo(styleKey);
-            if (db) {
-                await db.collection("store_meta").doc("appearance").set({ 
-                    theme: currentStoreTheme, 
-                    animation: currentStoreAnimation,
-                    logoStyle: styleKey
-                }, { merge: true });
-            } else {
-                localStorage.setItem("ak_store_logo_style", styleKey);
-            }
+            saveAppearanceSettings();
         };
 
-        // ====================================================
-        // 🌟 10 HIGH-PERFORMANCE INTERACTIVE CANVAS ANIMATIONS
-        // ====================================================
+        window.updateStoreSiteLogoAnim = async function(animClass) {
+            currentSiteLogoAnim = animClass;
+            const logoBox = document.getElementById("siteLogoBox");
+            if (logoBox) {
+                logoBox.className = `logo-img-box ${animClass}`;
+            }
+            saveAppearanceSettings();
+        };
+
+        window.updateStoreAboutFx = async function(fxClass) {
+            currentAboutFx = fxClass;
+            const deck = document.getElementById("footerChannelsDeck");
+            if (deck) {
+                deck.className = `social-channels-deck ${fxClass}`;
+            }
+            saveAppearanceSettings();
+        };
+
+        async function saveAppearanceSettings() {
+            const payload = {
+                theme: currentStoreTheme,
+                animation: currentStoreAnimation,
+                logoStyle: currentStoreLogoStyle,
+                siteLogoAnim: currentSiteLogoAnim,
+                aboutFx: currentAboutFx
+            };
+            if (db) {
+                await db.collection("store_meta").doc("appearance").set(payload, { merge: true });
+            } else {
+                localStorage.setItem("ak_store_appearance", JSON.stringify(payload));
+            }
+        }
+
+        window.saveFooterChannelLinks = async function() {
+            const tg = document.getElementById("adminTelegramUrlInput").value.trim();
+            const yt = document.getElementById("adminYoutubeUrlInput").value.trim();
+
+            if (tg) document.getElementById("channelLinkTelegram").href = tg;
+            if (yt) document.getElementById("channelLinkYoutube").href = yt;
+
+            if (db) {
+                await db.collection("store_meta").doc("channels").set({ telegram: tg, youtube: yt }, { merge: true });
+            }
+            showToast("🔗 Channel Links Updated Live!");
+        };
+
+        // Canvas Background Engine
         const canvas = document.getElementById("bgCanvas");
         const ctx = canvas.getContext("2d");
         let animationFrameId = null;
@@ -1879,9 +1562,7 @@
                 for (let i = 0; i < matrixColumns.length; i++) {
                     const char = String.fromCharCode(0x30A0 + Math.random() * 96);
                     ctx.fillText(char, i * 24, matrixColumns[i] * 24);
-                    if (matrixColumns[i] * 24 > height && Math.random() > 0.975) {
-                        matrixColumns[i] = 0;
-                    }
+                    if (matrixColumns[i] * 24 > height && Math.random() > 0.975) matrixColumns[i] = 0;
                     matrixColumns[i]++;
                 }
             } else if (type === "orbs") {
@@ -1944,7 +1625,6 @@
                     if (p.y > height) p.y = -5;
                     if (p.x < 0) p.x = width;
                     if (p.x > width) p.x = 0;
-
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                     ctx.fill();
@@ -1984,17 +1664,12 @@
             animationFrameId = requestAnimationFrame(() => loopAnimation(type));
         }
 
-        // ==========================================
-        // UI & FIREBASE SYNC ENGINE
-        // ==========================================
         function showToast(msg) {
             const toast = document.getElementById("toastAlert");
             if (!toast) return;
             toast.innerHTML = `<span>${msg}</span>`;
             toast.classList.add("show");
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 3000);
+            setTimeout(() => { toast.classList.remove("show"); }, 3000);
         }
 
         function formatIconHTML(iconStr) {
@@ -2026,29 +1701,13 @@
         window.updateStoreTheme = async function(themeClass) {
             currentStoreTheme = themeClass;
             applyThemeClass(themeClass);
-            if (db) {
-                await db.collection("store_meta").doc("appearance").set({ 
-                    theme: themeClass, 
-                    animation: currentStoreAnimation,
-                    logoStyle: currentStoreLogoStyle
-                }, { merge: true });
-            } else {
-                localStorage.setItem("ak_store_theme", themeClass);
-            }
+            saveAppearanceSettings();
         };
 
         window.updateStoreAnimation = async function(animType) {
             currentStoreAnimation = animType;
             initAnimationEffect(animType);
-            if (db) {
-                await db.collection("store_meta").doc("appearance").set({ 
-                    theme: currentStoreTheme, 
-                    animation: animType,
-                    logoStyle: currentStoreLogoStyle
-                }, { merge: true });
-            } else {
-                localStorage.setItem("ak_store_animation", animType);
-            }
+            saveAppearanceSettings();
         };
 
         function applyThemeClass(themeClass) {
@@ -2080,10 +1739,32 @@
                             currentStoreLogoStyle = data.logoStyle;
                             renderAdminTriggerLogo(data.logoStyle);
                         }
+                        if (data.siteLogoAnim) {
+                            currentSiteLogoAnim = data.siteLogoAnim;
+                            const el = document.getElementById("siteLogoBox");
+                            if (el) el.className = `logo-img-box ${data.siteLogoAnim}`;
+                            const sel = document.getElementById("adminSiteLogoAnimSelect");
+                            if (sel) sel.value = data.siteLogoAnim;
+                        }
+                        if (data.aboutFx) {
+                            currentAboutFx = data.aboutFx;
+                            const el = document.getElementById("footerChannelsDeck");
+                            if (el) el.className = `social-channels-deck ${data.aboutFx}`;
+                            const sel = document.getElementById("adminAboutFxSelect");
+                            if (sel) sel.value = data.aboutFx;
+                        }
                     } else {
                         applyThemeClass("theme-default");
                         applyAnimationType("none");
                         renderAdminTriggerLogo("type-default");
+                    }
+                }, (err) => console.error(err));
+
+                db.collection("store_meta").doc("channels").onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data.telegram) document.getElementById("channelLinkTelegram").href = data.telegram;
+                        if (data.youtube) document.getElementById("channelLinkYoutube").href = data.youtube;
                     }
                 }, (err) => console.error(err));
 
@@ -2139,9 +1820,6 @@
 
             const savedAnim = localStorage.getItem("ak_store_animation") || "none";
             applyAnimationType(savedAnim);
-
-            const savedLogo = localStorage.getItem("ak_store_logo_style") || "type-default";
-            renderAdminTriggerLogo(savedLogo);
 
             renderCategoryUI();
             renderStoreApps();
@@ -2355,11 +2033,8 @@
                 selectedReviewRating = parseInt(star.getAttribute("data-value"));
                 stars.forEach(s => {
                     const val = parseInt(s.getAttribute("data-value"));
-                    if (val <= selectedReviewRating) {
-                        s.classList.add("selected");
-                    } else {
-                        s.classList.remove("selected");
-                    }
+                    if (val <= selectedReviewRating) s.classList.add("selected");
+                    else s.classList.remove("selected");
                 });
             });
         });
@@ -2387,9 +2062,7 @@
             }];
 
             if (db) {
-                await db.collection("apps").doc(currentlyOpenedAppId).update({
-                    reviews: updatedReviews
-                });
+                await db.collection("apps").doc(currentlyOpenedAppId).update({ reviews: updatedReviews });
             } else {
                 app.reviews = updatedReviews;
                 localStorage.setItem("ak_star_apps", JSON.stringify(liveApps));
@@ -2588,9 +2261,7 @@
             currentCategory = cat;
             const allButtons = document.querySelectorAll(".categories .chip");
             allButtons.forEach(b => b.classList.remove("active"));
-            if (buttonEl) {
-                buttonEl.classList.add("active");
-            }
+            if (buttonEl) buttonEl.classList.add("active");
             renderStoreApps();
         };
 
@@ -2605,9 +2276,7 @@
                     secretKeyInput.value = "";
                     secretKeyInput.focus();
                 }
-                if (authErrorMsg) {
-                    authErrorMsg.style.display = "none";
-                }
+                if (authErrorMsg) authErrorMsg.style.display = "none";
             }
         };
 
@@ -2638,6 +2307,8 @@
                 document.getElementById("adminThemeSelect").value = currentStoreTheme;
                 document.getElementById("adminAnimSelect").value = currentStoreAnimation;
                 document.getElementById("adminLogoStyleSelect").value = currentStoreLogoStyle;
+                document.getElementById("adminSiteLogoAnimSelect").value = currentSiteLogoAnim;
+                document.getElementById("adminAboutFxSelect").value = currentAboutFx;
             } else {
                 if (authErrorMsg) authErrorMsg.style.display = "block";
             }
