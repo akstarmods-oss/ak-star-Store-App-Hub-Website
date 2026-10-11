@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK (Compat Version) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
@@ -105,7 +105,7 @@
             pointer-events: none;
         }
 
-        .app-card, .btn-download, .btn-share, .chip, .btn-admin-access, .modal-card, .btn-primary, .cat-badge {
+        .app-card, .btn-download, .btn-share, .chip, .modal-card, .btn-primary, .cat-badge {
             will-change: transform, box-shadow;
             transform: translateZ(0);
         }
@@ -189,7 +189,27 @@
             box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        .btn-admin-access {
+        /* ====================================================
+           🔥 3D ANIMATED LOGO / BADGE TRIGGER ENGINE
+           ==================================================== */
+        .admin-trigger-wrapper {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .admin-trigger-wrapper:hover {
+            transform: scale(1.08);
+        }
+        .admin-trigger-wrapper:active {
+            transform: scale(0.96);
+        }
+
+        /* 1. Default Original Pill */
+        .btn-admin-access.type-default {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
@@ -197,25 +217,247 @@
             border-radius: 12px;
             font-size: 0.88rem;
             font-weight: 600;
-            cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            user-select: none;
+        }
+
+        /* 3D Base Icon Frame */
+        .icon-3d-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
             position: relative;
-            z-index: 10;
+            perspective: 800px;
         }
 
-        .btn-admin-access * {
-            pointer-events: none;
+        /* 2. Quantum Neon Cube */
+        .type-quantum-cube {
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+            animation: spinCube3D 5s infinite linear;
+        }
+        @keyframes spinCube3D {
+            0% { transform: rotateY(0deg) rotateX(15deg); }
+            100% { transform: rotateY(360deg) rotateX(15deg); }
         }
 
-        .btn-admin-access:hover {
-            background: rgba(99, 102, 241, 0.2);
-            border-color: var(--accent);
-            box-shadow: 0 0 16px var(--accent-glow);
-            transform: translateY(-1px);
+        /* 3. Cyber Ring Hologram */
+        .type-cyber-ring {
+            border: 2px dashed #06b6d4;
+            border-radius: 50%;
+            box-shadow: 0 0 22px rgba(6, 182, 212, 0.5);
+            animation: rotateHoloRing 3.5s infinite linear;
+        }
+        @keyframes rotateHoloRing {
+            0% { transform: rotate(0deg) scale(0.95); }
+            50% { transform: rotate(180deg) scale(1.06); }
+            100% { transform: rotate(360deg) scale(0.95); }
+        }
+
+        /* 4. Glowing Floating Diamond */
+        .type-floating-diamond {
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            transform: rotate(45deg);
+            box-shadow: 0 0 24px rgba(168, 85, 247, 0.6);
+            animation: floatDiamond 3s ease-in-out infinite alternate;
+        }
+        @keyframes floatDiamond {
+            0% { transform: rotate(45deg) translateY(0); }
+            100% { transform: rotate(45deg) translateY(-6px); }
+        }
+
+        /* 5. Orbital Core Sphere */
+        .type-orbital-core {
+            border-radius: 50%;
+            background: radial-gradient(circle, #ec4899 0%, #8b5cf6 80%);
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.55);
+            animation: coreBreathe 2.4s ease-in-out infinite;
+        }
+        @keyframes coreBreathe {
+            0%, 100% { transform: scale(0.92); filter: drop-shadow(0 0 10px #ec4899); }
+            50% { transform: scale(1.08); filter: drop-shadow(0 0 25px #8b5cf6); }
+        }
+
+        /* 6. Pulse Reactor */
+        .type-pulse-reactor {
+            background: rgba(16, 185, 129, 0.15);
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            animation: reactorPulse 1.8s infinite;
+        }
+        @keyframes reactorPulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* 7. Cyber Vault Lock */
+        .type-vault-lock {
+            background: #1e1b4b;
+            border: 2px solid #6366f1;
+            border-radius: 14px;
+            animation: vaultTwist 4s ease-in-out infinite;
+        }
+        @keyframes vaultTwist {
+            0%, 100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(180deg); }
+        }
+
+        /* 8. Cosmic Portal */
+        .type-cosmic-portal {
+            border-radius: 50%;
+            background: conic-gradient(from 180deg, #6366f1, #ec4899, #06b6d4, #6366f1);
+            animation: portalSpin 2s linear infinite;
+            padding: 3px;
+        }
+        @keyframes portalSpin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 9. Infinity Prism */
+        .type-infinity-prism {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            border-radius: 12px;
+            animation: prismGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes prismGlow {
+            0% { transform: rotate(-5deg) scale(0.95); filter: hue-rotate(0deg); }
+            100% { transform: rotate(5deg) scale(1.05); filter: hue-rotate(90deg); }
+        }
+
+        /* 10. Laser Hex Shield */
+        .type-laser-hex {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+            animation: hexBob 2.5s ease-in-out infinite alternate;
+        }
+        @keyframes hexBob {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        /* 11. Tachyon Lightning */
+        .type-tachyon-bolt {
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid #f59e0b;
+            border-radius: 50%;
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+            animation: boltFlash 1.6s ease-in-out infinite;
+        }
+        @keyframes boltFlash {
+            0%, 100% { filter: brightness(1); transform: scale(1); }
+            50% { filter: brightness(1.6); transform: scale(1.1); }
+        }
+
+        /* 12. Golden Sovereign Crown */
+        .type-sovereign-crown {
+            background: radial-gradient(circle, #fbbf24 0%, #b45309 90%);
+            border-radius: 12px;
+            box-shadow: 0 0 24px rgba(251, 191, 36, 0.55);
+            animation: crownShine 3s infinite;
+        }
+        @keyframes crownShine {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06) rotate(3deg); }
+        }
+
+        /* 13. DNA Helix */
+        .type-dna-helix {
+            border: 2px solid #8b5cf6;
+            border-radius: 50%;
+            animation: dnaWobble 2.4s ease-in-out infinite alternate;
+            background: rgba(139, 92, 246, 0.15);
+        }
+        @keyframes dnaWobble {
+            0% { transform: rotateX(0deg) rotateZ(0deg); }
+            100% { transform: rotateX(70deg) rotateZ(180deg); }
+        }
+
+        /* 14. Biohazard Cyber Core */
+        .type-bio-core {
+            border: 2px solid #ef4444;
+            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.15);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+            animation: bioPulse 2s ease-in-out infinite;
+        }
+        @keyframes bioPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        /* 15. Radar Scanner Disc */
+        .type-radar-scanner {
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 20%, transparent 70%);
+            border: 1.5px solid #10b981;
+            animation: radarRotate 2s linear infinite;
+        }
+        @keyframes radarRotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 16. Vortex 3D */
+        .type-vortex-3d {
+            border-radius: 50%;
+            background: radial-gradient(circle, #6366f1 10%, #06b6d4 90%);
+            animation: vortexSpin 1.8s linear infinite reverse;
+        }
+        @keyframes vortexSpin {
+            100% { transform: rotate(-360deg); }
+        }
+
+        /* 17. Matrix Glyph */
+        .type-matrix-glyph {
+            background: #022c22;
+            border: 1px solid #10b981;
+            border-radius: 10px;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+            animation: glyphGlow 2s ease infinite alternate;
+        }
+        @keyframes glyphGlow {
+            0% { box-shadow: 0 0 8px #10b981; }
+            100% { box-shadow: 0 0 25px #34d399; }
+        }
+
+        /* 18. Crystal Hyper-Pyramid */
+        .type-crystal-pyramid {
+            background: linear-gradient(135deg, #0ea5e9, #a855f7);
+            border-radius: 12px;
+            animation: pyramidTumble 4s ease-in-out infinite;
+        }
+        @keyframes pyramidTumble {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg) scale(0.9); }
+        }
+
+        /* 19. Atomic Reactor */
+        .type-atomic-reactor {
+            border: 1.5px solid #ec4899;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+            animation: atomSpin 3s linear infinite;
+        }
+        @keyframes atomSpin {
+            0% { transform: rotate(0deg) skewX(10deg); }
+            100% { transform: rotate(360deg) skewX(10deg); }
+        }
+
+        /* 20. Starlight Spark */
+        .type-starlight-spark {
+            background: radial-gradient(circle, #ffffff 10%, #6366f1 80%);
+            border-radius: 50%;
+            box-shadow: 0 0 26px rgba(255, 255, 255, 0.7);
+            animation: starlightTwinkle 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes starlightTwinkle {
+            0% { transform: scale(0.85); filter: brightness(1); }
+            100% { transform: scale(1.12); filter: brightness(1.7); }
         }
 
         /* Layout */
@@ -577,7 +819,6 @@
             color: var(--text-primary);
         }
 
-        /* Play Store Details Modal */
         .details-hero {
             display: flex;
             gap: 20px;
@@ -841,8 +1082,8 @@
             padding: 16px;
             margin-bottom: 20px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
         }
 
         .appearance-controls-box select {
@@ -1077,14 +1318,11 @@
             <div class="search-bar">
                 <input type="text" placeholder="Search apps, tools, games..." id="searchInput">
             </div>
-            <!-- Admin Secret Trigger Button -->
-            <button class="btn-admin-access" id="openAdminModalBtn" onclick="openAuthModal()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
-                <span>Admin Portal</span>
-            </button>
+            
+            <!-- Dynamic 3D Animated Admin Portal Trigger [20 Types Controllable] -->
+            <div class="admin-trigger-wrapper" id="adminTriggerContainer" onclick="openAuthModal()" title="Admin Control Center">
+                <!-- Rendered dynamically via JavaScript -->
+            </div>
         </div>
     </header>
 
@@ -1121,7 +1359,6 @@
                 <button class="close-btn" onclick="closeDetailsModal()">&times;</button>
             </div>
 
-            <!-- Details Hero -->
             <div class="details-hero">
                 <div class="details-icon" id="modalAppIcon">📱</div>
                 <div class="details-title">
@@ -1130,7 +1367,6 @@
                 </div>
             </div>
 
-            <!-- Play Store Stats Badges -->
             <div class="playstore-badges-row">
                 <div class="badge-col">
                     <span class="badge-col-val" id="modalRatingVal">4.8 ★</span>
@@ -1146,7 +1382,6 @@
                 </div>
             </div>
 
-            <!-- Action Buttons (Download & Share) -->
             <div class="details-actions-bar">
                 <a href="#" target="_blank" download class="btn-download" id="modalDownloadBtn">
                     <span>Install / Download APK</span>
@@ -1168,20 +1403,17 @@
                 </button>
             </div>
 
-            <!-- Description -->
             <div>
                 <h4 style="font-size: 0.95rem; margin-bottom: 8px; color: #c7d2fe;">About this app</h4>
                 <p id="modalAppDesc" style="color: var(--text-muted); line-height: 1.6; font-size: 0.92rem;"></p>
             </div>
 
-            <!-- Reviews & Rating Section -->
             <div class="reviews-section">
                 <h3>
                     <span>Ratings & User Reviews</span>
                     <span style="font-size: 0.85rem; color: #fbbf24;" id="modalRatingOverview">★ 4.8 / 5</span>
                 </h3>
 
-                <!-- Write a Review Form -->
                 <div class="write-review-box">
                     <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe;">Leave a Review:</label>
                     <div class="star-rating-select" id="starRatingSelector">
@@ -1200,7 +1432,6 @@
                     <button class="btn-primary" type="button" onclick="submitUserReview()" style="padding: 10px; font-size: 0.88rem;">Post Review</button>
                 </div>
 
-                <!-- Reviews Feed -->
                 <div class="reviews-list" id="modalReviewsList">
                     <!-- Populated dynamically -->
                 </div>
@@ -1235,7 +1466,7 @@
                 <button class="close-btn" id="closeDashboardModal" onclick="closeDashboardModalFunc()">&times;</button>
             </div>
 
-            <!-- Appearance & 3D Interactive Animation Controls -->
+            <!-- Appearance, Animations & 3D Logo Controls -->
             <div class="appearance-controls-box">
                 <div>
                     <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
@@ -1251,7 +1482,7 @@
                 </div>
                 <div>
                     <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
-                        ✨ 3D / Interactive Background FX (10 Types)
+                        ✨ 3D / Background FX (10 Types)
                     </label>
                     <select id="adminAnimSelect" onchange="updateStoreAnimation(this.value)">
                         <option value="none">1. Default Minimal (Clean - No FX)</option>
@@ -1264,6 +1495,33 @@
                         <option value="vortex">8. Cosmic Dust Vortex</option>
                         <option value="aurora">9. Fluid Aurora Wave Glow</option>
                         <option value="sparkles">10. Quantum Twinkling Stars</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 700; color: #c7d2fe; display: block; margin-bottom: 8px;">
+                        🔮 Admin Portal 3D Logo (20 Types)
+                    </label>
+                    <select id="adminLogoStyleSelect" onchange="updateStoreLogoStyle(this.value)">
+                        <option value="type-default">1. Default Lock Pill Button</option>
+                        <option value="type-quantum-cube">2. 3D Neon Quantum Cube</option>
+                        <option value="type-cyber-ring">3. Hologram Cyber Ring</option>
+                        <option value="type-floating-diamond">4. Floating Glowing Diamond</option>
+                        <option value="type-orbital-core">5. Orbital Core Sphere</option>
+                        <option value="type-pulse-reactor">6. Pulse Reactor Badge</option>
+                        <option value="type-vault-lock">7. Cyber Vault Lock 3D</option>
+                        <option value="type-cosmic-portal">8. Cosmic Nebula Portal</option>
+                        <option value="type-infinity-prism">9. Infinity Prism</option>
+                        <option value="type-laser-hex">10. Laser Hex Shield</option>
+                        <option value="type-tachyon-bolt">11. Tachyon Lightning Bolt</option>
+                        <option value="type-sovereign-crown">12. Golden Sovereign Crown</option>
+                        <option value="type-dna-helix">13. Digital DNA Helix</option>
+                        <option value="type-bio-core">14. Biohazard Cyber Core</option>
+                        <option value="type-radar-scanner">15. Radar Scanner Disc</option>
+                        <option value="type-vortex-3d">16. Vortex Portal 3D</option>
+                        <option value="type-matrix-glyph">17. Matrix Glitch Glyph</option>
+                        <option value="type-crystal-pyramid">18. Crystal Hyper-Pyramid</option>
+                        <option value="type-atomic-reactor">19. Atomic Reactor Orbit</option>
+                        <option value="type-starlight-spark">20. Starlight Spark Orb</option>
                     </select>
                 </div>
             </div>
@@ -1417,6 +1675,55 @@
         let hasCheckedDirectAppParam = false;
         let currentStoreTheme = "theme-default";
         let currentStoreAnimation = "none";
+        let currentStoreLogoStyle = "type-default";
+
+        // ====================================================
+        // 🔮 RENDER 20 TYPES OF 3D ANIMATED LOGOS
+        // ====================================================
+        const logoDefinitions = {
+            "type-default": `<button class="btn-admin-access type-default"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><span>Admin Portal</span></button>`,
+            "type-quantum-cube": `<div class="icon-3d-box type-quantum-cube">🧊</div>`,
+            "type-cyber-ring": `<div class="icon-3d-box type-cyber-ring">💫</div>`,
+            "type-floating-diamond": `<div class="icon-3d-box type-floating-diamond">💎</div>`,
+            "type-orbital-core": `<div class="icon-3d-box type-orbital-core">🔮</div>`,
+            "type-pulse-reactor": `<div class="icon-3d-box type-pulse-reactor">⚡</div>`,
+            "type-vault-lock": `<div class="icon-3d-box type-vault-lock">🔐</div>`,
+            "type-cosmic-portal": `<div class="icon-3d-box type-cosmic-portal">🌀</div>`,
+            "type-infinity-prism": `<div class="icon-3d-box type-infinity-prism">💠</div>`,
+            "type-laser-hex": `<div class="icon-3d-box type-laser-hex">🛡️</div>`,
+            "type-tachyon-bolt": `<div class="icon-3d-box type-tachyon-bolt">⚡</div>`,
+            "type-sovereign-crown": `<div class="icon-3d-box type-sovereign-crown">👑</div>`,
+            "type-dna-helix": `<div class="icon-3d-box type-dna-helix">🧬</div>`,
+            "type-bio-core": `<div class="icon-3d-box type-bio-core">☣️</div>`,
+            "type-radar-scanner": `<div class="icon-3d-box type-radar-scanner">📡</div>`,
+            "type-vortex-3d": `<div class="icon-3d-box type-vortex-3d">🪐</div>`,
+            "type-matrix-glyph": `<div class="icon-3d-box type-matrix-glyph">👁️</div>`,
+            "type-crystal-pyramid": `<div class="icon-3d-box type-crystal-pyramid">🔺</div>`,
+            "type-atomic-reactor": `<div class="icon-3d-box type-atomic-reactor">⚛️</div>`,
+            "type-starlight-spark": `<div class="icon-3d-box type-starlight-spark">✨</div>`
+        };
+
+        function renderAdminTriggerLogo(styleKey) {
+            const container = document.getElementById("adminTriggerContainer");
+            if (!container) return;
+            container.innerHTML = logoDefinitions[styleKey] || logoDefinitions["type-default"];
+            const select = document.getElementById("adminLogoStyleSelect");
+            if (select) select.value = styleKey || "type-default";
+        }
+
+        window.updateStoreLogoStyle = async function(styleKey) {
+            currentStoreLogoStyle = styleKey;
+            renderAdminTriggerLogo(styleKey);
+            if (db) {
+                await db.collection("store_meta").doc("appearance").set({ 
+                    theme: currentStoreTheme, 
+                    animation: currentStoreAnimation,
+                    logoStyle: styleKey
+                }, { merge: true });
+            } else {
+                localStorage.setItem("ak_store_logo_style", styleKey);
+            }
+        };
 
         // ====================================================
         // 🌟 10 HIGH-PERFORMANCE INTERACTIVE CANVAS ANIMATIONS
@@ -1426,17 +1733,10 @@
         let animationFrameId = null;
         let width = canvas.width = window.innerWidth;
         let height = canvas.height = window.innerHeight;
-        let mouse = { x: width / 2, y: height / 2, active: false };
 
         window.addEventListener("resize", () => {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-        });
-
-        window.addEventListener("mousemove", (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-            mouse.active = true;
         });
 
         let particles = [];
@@ -1696,7 +1996,11 @@
             currentStoreTheme = themeClass;
             applyThemeClass(themeClass);
             if (db) {
-                await db.collection("store_meta").doc("appearance").set({ theme: themeClass, animation: currentStoreAnimation }, { merge: true });
+                await db.collection("store_meta").doc("appearance").set({ 
+                    theme: themeClass, 
+                    animation: currentStoreAnimation,
+                    logoStyle: currentStoreLogoStyle
+                }, { merge: true });
             } else {
                 localStorage.setItem("ak_store_theme", themeClass);
             }
@@ -1706,7 +2010,11 @@
             currentStoreAnimation = animType;
             initAnimationEffect(animType);
             if (db) {
-                await db.collection("store_meta").doc("appearance").set({ theme: currentStoreTheme, animation: animType }, { merge: true });
+                await db.collection("store_meta").doc("appearance").set({ 
+                    theme: currentStoreTheme, 
+                    animation: animType,
+                    logoStyle: currentStoreLogoStyle
+                }, { merge: true });
             } else {
                 localStorage.setItem("ak_store_animation", animType);
             }
@@ -1737,9 +2045,14 @@
                         if (data.animation) {
                             applyAnimationType(data.animation);
                         }
+                        if (data.logoStyle) {
+                            currentStoreLogoStyle = data.logoStyle;
+                            renderAdminTriggerLogo(data.logoStyle);
+                        }
                     } else {
                         applyThemeClass("theme-default");
                         applyAnimationType("none");
+                        renderAdminTriggerLogo("type-default");
                     }
                 }, (err) => console.error(err));
 
@@ -1795,6 +2108,9 @@
 
             const savedAnim = localStorage.getItem("ak_store_animation") || "none";
             applyAnimationType(savedAnim);
+
+            const savedLogo = localStorage.getItem("ak_store_logo_style") || "type-default";
+            renderAdminTriggerLogo(savedLogo);
 
             renderCategoryUI();
             renderStoreApps();
@@ -1966,7 +2282,6 @@
             document.getElementById("modalAppDesc").innerText = app.description;
             document.getElementById("modalRatingOverview").innerText = `★ ${avgRating} / 5 (${reviewCount} total ratings)`;
 
-            // Render Reviews List
             renderModalReviewsList(app);
 
             document.getElementById("appDetailsModal").classList.add("active");
@@ -2291,6 +2606,7 @@
                 renderAdminList();
                 document.getElementById("adminThemeSelect").value = currentStoreTheme;
                 document.getElementById("adminAnimSelect").value = currentStoreAnimation;
+                document.getElementById("adminLogoStyleSelect").value = currentStoreLogoStyle;
             } else {
                 if (authErrorMsg) authErrorMsg.style.display = "block";
             }
